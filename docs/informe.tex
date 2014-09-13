@@ -1,0 +1,97 @@
+\documentclass[a4paper,11pt]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Paquetes utilizados
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Graficos complejos
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{placeins}
+
+% Soporte para el lenguaje español
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\DeclareUnicodeCharacter{B0}{\textdegree}
+\usepackage[spanish]{babel}
+
+% Codigo fuente embebido
+\usepackage{listings}
+
+% PDFs embebidos para el apendice
+\usepackage{pdfpages}
+
+% Matematicos
+\usepackage{amssymb,amsmath}
+
+% Tablas complejas
+\usepackage{multirow}
+
+% Fromato MIPS para los archivos incluidos
+% \usepackage{docs/mips}
+
+% Formato de parrafo
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titulo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Titulo principal del documento.
+\title{\textbf{Trabajo Practico 1: ConcuCalesita}}
+
+% Informacion sobre los autores.
+\author{\\
+  Arana Andrés, \textit{P. 86.203}                                 \\
+  \texttt{and2arana@gmail.com}                                     \\ [2.5ex]
+  Sergio Matias Piano, \textit{P. 85.191}                          \\
+  \texttt{smpiano@gmail.com}                                       \\ [2.5ex]
+                                                                   \\
+  \normalsize{2do. Cuatrimestre de 2014}                           \\
+  \normalsize{75.59 Técnicas de programación concurrentes 1}       \\
+  \normalsize{Facultad de Ingenieria, Universidad de Buenos Aires} \\
+}
+\date{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Documento
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+% ----------------------------------------------------------------------
+% Top matter
+% ----------------------------------------------------------------------
+\thispagestyle{empty}
+\maketitle
+
+\begin{abstract}
+
+  Este informe sumariza el desarrollo del trabajo practico 1 de la materia
+  Técnicas de programación concurrentes 1 (75.59) dictada en el segundo
+  cuatrimestre de 2014 en la Facultad de Ingenieria de la Universidad de Buenos
+  Aires. El mismo consiste en la construccion de una simulación del uso de una
+  calesita utilizando técnicas de sincronización de procesos.
+
+\end{abstract}
+
+\clearpage
+
+% ----------------------------------------------------------------------
+% Tabla de contenidos
+% ----------------------------------------------------------------------
+\tableofcontents
+\clearpage
+
+
+% ----------------------------------------------------------------------
+% Desarrollo
+% ----------------------------------------------------------------------
+\part{Desarrollo}
+
+\section{Enunciado original}\label{sec:enunciado}
+\includepdf[pages={-}]{docs/enunciado.pdf}
+
+\end{document}
