@@ -1,17 +1,7 @@
-build:
-	mkdir build
-
-build/doc: build
-	mkdir build/doc
+.PHONY: clean doc-preview doc-spell export
 
 clean:
 	rm -rf build tags
-
-build/doc/informe.pdf: build/doc docs/informe.tex
-	pandoc README.md -o build/doc/README.pdf
-	pdflatex --output-directory build/doc docs/informe.tex
-	pdflatex --output-directory build/doc docs/informe.tex
-	pdflatex --output-directory build/doc docs/informe.tex
 
 doc-preview: build/doc/informe.pdf
 	evince build/doc/informe.pdf &
@@ -20,4 +10,16 @@ doc-spell: docs/informe.tex
 	aspell -t check docs/informe.tex -d es
 
 export: build/doc/informe.pdf
-	tar -czvf build/entrega_tp1.tar.gz makefile source1 data -C build/doc/ informe.pdf README.pdf
+	tar -czvf build/entrega.tar.gz makefile -C build/doc/ informe.pdf
+
+build:
+	mkdir build
+
+build/doc: build
+	mkdir build/doc
+
+build/doc/informe.pdf: build/doc docs/informe.tex
+	pdflatex --output-directory build/doc docs/informe.tex
+	pdflatex --output-directory build/doc docs/informe.tex
+	pdflatex --output-directory build/doc docs/informe.tex
+
