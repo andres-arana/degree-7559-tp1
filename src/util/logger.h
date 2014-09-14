@@ -21,11 +21,6 @@ namespace util {
        */
       void log(const std::string &method, const std::string &message);
 
-      /**
-       * Raises a runtime error using the errno
-       */
-      void raise_errno(const std::string &syscall) const;
-
     public:
       /*
        * Default constructor.

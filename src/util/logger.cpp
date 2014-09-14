@@ -1,11 +1,10 @@
 #include <ctime>
 #include <sys/file.h>
 #include <unistd.h>
-#include <errno.h>
-#include <stdexcept>
 #include <sstream>
 #include "logger.h"
 #include "file_lock.h"
+#include "syscall_error.h"
 
 using namespace std;
 using namespace util;
@@ -18,7 +17,7 @@ logger::logger() {
   if ( this->file_descriptor < 0 ) {
     this->file_descriptor = creat(FILENAME, PERMS);
     if (this->file_descriptor < 0 ) {
-      throw runtime_error("Error abriendo el archivo de " FILENAME);
+      throw syscall_error("creat (abriendo el archivo de " FILENAME ")");
     }
   }
 }
@@ -37,14 +36,8 @@ void logger::log(const string &method, const string &message) {
 
   auto res = write(this->file_descriptor, buffer.c_str(), buffer.length());
   if (res < 0) {
-    this->raise_errno("write");
+    throw syscall_error("write");
   }
-}
-
-void logger::raise_errno(const std::string &syscall) const {
-  stringstream error;
-  error << "La syscall " << syscall << " fallo con error = " << errno;
-  throw runtime_error(error.str());
 }
 
 void logger::info(const string &message) {
@@ -65,6 +58,6 @@ void logger::error(const string &message) {
 
 logger::~logger() {
   if (close( this->file_descriptor )) {
-    throw runtime_error("Cagamos la fruta");
+    throw syscall_error("close");
   }
 }

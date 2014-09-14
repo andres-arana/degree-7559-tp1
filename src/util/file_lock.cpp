@@ -1,8 +1,6 @@
 #include "file_lock.h"
+#include "syscall_error.h"
 #include <sys/file.h>
-#include <errno.h>
-#include <stdexcept>
-#include <sstream>
 
 using namespace std;
 using namespace util;
@@ -19,7 +17,7 @@ file_lock::file_lock(const string &filename) {
   if ( this->file_descriptor < 0 ) {
     this->file_descriptor = creat(filename.c_str(), PERMS);
     if (this->file_descriptor < 0 ) {
-      throw runtime_error("Error abriendo el archivo de " + filename);
+      throw syscall_error("creat (abriendo el archivo de " + filename + ")");
     }
   }
 
@@ -32,18 +30,13 @@ file_lock::~file_lock() {
 
 void file_lock::lock() {
   if (flock(this->file_descriptor, LOCK_EX)) {
-    this->raise_errno("flock lock");
+    throw syscall_error("flock (lock)");
   }
 }
 
 void file_lock::unlock() {
     if (flock(this->file_descriptor, LOCK_UN)) {
-      this->raise_errno("flock unlock");
+      throw syscall_error("flock (unlock)");
     }
 }
 
-void file_lock::raise_errno(const string &syscall) const {
-  stringstream error;
-  error << "La syscall " << syscall << " fallo con error = " << errno;
-  throw runtime_error(error.str());
-}

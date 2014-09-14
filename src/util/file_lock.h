@@ -13,8 +13,6 @@ namespace util {
 
       void unlock();
 
-      void raise_errno(const std::string &syscall) const;
-
     public:
 
       explicit file_lock(int file_descriptor);
