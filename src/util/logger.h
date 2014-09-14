@@ -1,5 +1,5 @@
-#ifndef __INCLUDE_LOGGER_H__
-#define __INCLUDE_LOGGER_H__
+#ifndef __UTIL_LOGGER_H_INCLUDED__
+#define __UTIL_LOGGER_H_INCLUDED__
 
 #include <string>
 

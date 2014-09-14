@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <sstream>
 #include "logger.h"
+#include "file_lock.h"
 
 using namespace std;
 using namespace util;
@@ -23,27 +24,20 @@ logger::logger() {
 }
 
 void logger::log(const string &method, const string &message) {
-  auto locking = flock( this->file_descriptor, LOCK_EX);
-  if (locking == 0) {
-    char buff[80];
-    auto now = time(0);
-    auto tstruct = *localtime(&now);
-    strftime(buff, sizeof(buff), "%Y-%m-%d.%X", &tstruct);
+  file_lock lock(this->file_descriptor);
 
-    stringstream stream;
-    stream << buff << " PID:" << getpid() << " [" << method << "] - " << message << endl;
-    auto buffer = stream.str();
+  char buff[80];
+  auto now = time(0);
+  auto tstruct = *localtime(&now);
+  strftime(buff, sizeof(buff), "%Y-%m-%d.%X", &tstruct);
 
-    auto res = write(this->file_descriptor, buffer.c_str(), buffer.length());
-    if (res < 0) {
-      this->raise_errno("write");
-    }
+  stringstream stream;
+  stream << buff << " PID:" << getpid() << " [" << method << "] - " << message << endl;
+  auto buffer = stream.str();
 
-    auto unlock = flock( this->file_descriptor, LOCK_UN );
-
-    if (unlock < 0) {
-      this->raise_errno("flock");
-    }
+  auto res = write(this->file_descriptor, buffer.c_str(), buffer.length());
+  if (res < 0) {
+    this->raise_errno("write");
   }
 }
 
