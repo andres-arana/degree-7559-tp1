@@ -6,8 +6,6 @@
 #include <unistd.h>
 #include <sstream>
 
-#include <iostream>
-
 using namespace util;
 
 namespace {
@@ -29,8 +27,6 @@ namespace {
 
     auto_file_lock lock(file.fd());
 
-    std::cout << "Acquired lock" << std::endl;
-
     std::stringstream message_stream;
     message_stream <<
       humanized_current_time() <<
@@ -42,9 +38,6 @@ namespace {
     if (write(file.fd(), buffer.c_str(), buffer.length()) < 0) {
       throw syscall_error("write");
     }
-
-    std::cout << "Message written to disk, to release lock press any key" << std::endl;
-    std::cin.ignore();
   }
 };
 

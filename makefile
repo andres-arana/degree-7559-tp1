@@ -25,6 +25,7 @@ doc-spell: docs/informe.tex
 
 clean:
 	rm -rf build
+	rm -f concucalesita.log
 
 export: all doc
 	# TODO: Complete the export task
