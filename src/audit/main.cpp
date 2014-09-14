@@ -1,10 +1,10 @@
 #include <cstdlib>
-#include "util/main.h"
+#include "util/sync_log.h"
 
 int main() {
-  util::logger log;
+  util::sync_log log;
 
-  log.error("soy audit");
+  log.error("Soy audit");
 
   return EXIT_SUCCESS;
 }

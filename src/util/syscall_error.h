@@ -8,7 +8,12 @@ namespace util {
 
   class syscall_error : public std::runtime_error {
     public:
-      explicit syscall_error(const std::string &syscall);
+      explicit syscall_error(
+          const std::string &syscall);
+
+      explicit syscall_error(
+          const std::string &syscall,
+          const std::string &context);
   };
 
 };
