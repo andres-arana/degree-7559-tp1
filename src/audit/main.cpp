@@ -1,8 +1,8 @@
 #include <cstdlib>
 #include "util/main.h"
 
-int main(int argc, char **argv) {
-  logger log;
+int main() {
+  util::logger log;
 
   log.error("soy audit");
 

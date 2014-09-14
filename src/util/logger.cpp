@@ -1,62 +1,75 @@
-#include "logger.h"
+#include <ctime>
+#include <sys/file.h>
+#include <unistd.h>
+#include <errno.h>
 #include <stdexcept>
+#include <sstream>
+#include "logger.h"
 
 using namespace std;
+using namespace util;
 
 #define PERMS 0666 /* RW for owner, group and others */
 #define FILENAME "concucalesita.log"
 
 logger::logger() {
-  this->file_descriptor = open( FILENAME, O_WRONLY | O_APPEND);
+  this->file_descriptor = open(FILENAME, O_WRONLY | O_APPEND);
   if ( this->file_descriptor < 0 ) {
-    this->file_descriptor = creat( FILENAME, PERMS);
+    this->file_descriptor = creat(FILENAME, PERMS);
     if (this->file_descriptor < 0 ) {
-      throw runtime_error("Error abriendo el arhcivo de " FILENAME);
+      throw runtime_error("Error abriendo el archivo de " FILENAME);
     }
   }
 }
 
 void logger::log(const string &method, const string &message) {
-  /* LOCK_SH: Place a shared lock. More than one process may hold a shared lock
-   * for a given file at a given time. */
-  int locking = flock( this->file_descriptor, LOCK_SH);
+  auto locking = flock( this->file_descriptor, LOCK_SH);
   if (locking == 0) {
-    time_t now = time(0);
-    struct tm tstruct;
     char buff[80];
-    tstruct = *localtime(&now);
+    auto now = time(0);
+    auto tstruct = *localtime(&now);
     strftime(buff, sizeof(buff), "%Y-%m-%d.%X", &tstruct);
-    string buffer = string(string(buff) + " [" + method + "] - " + message + "\n");
-    ssize_t res = write( this->file_descriptor, buffer.c_str(), buffer.length());
-    if (res<0) {
-      //TODO throw a runtime_error()
+
+    stringstream stream;
+    stream << buff << "[" << method << "] - " << message << endl;
+    auto buffer = stream.str();
+
+    auto res = write(this->file_descriptor, buffer.c_str(), buffer.length());
+    if (res < 0) {
+      this->raise_errno("write");
     }
-    /* LOCK_UN: Remove an existing lock held by this process.*/
-    int unlock = flock( this->file_descriptor, LOCK_UN );
-    if (unlock == 0) {
-      //TODO throw a runtime_error()
+
+    auto unlock = flock( this->file_descriptor, LOCK_UN );
+    if (unlock < 0) {
+      this->raise_errno("flock");
     }
   }
 }
 
+void logger::raise_errno(const std::string &syscall) const {
+  stringstream error;
+  error << "La syscall " << syscall << " fallo con error = " << errno;
+  throw runtime_error(error.str());
+}
+
 void logger::info(const string &message) {
-  this->log(string("INFO"), message);
+  this->log("INFO", message);
 }
 
 void logger::warn(const string &message) {
-  this->log(string("WARN"), message);
+  this->log("WARN", message);
 }
 
 void logger::debug(const string &message) {
-  this->log(string("DEBUG"), message);
+  this->log("DEBUG", message);
 }
 
 void logger::error(const string &message) {
-  this->log(string("ERROR"), message);
+  this->log("ERROR", message);
 }
 
 logger::~logger() {
-  if (close( this->file_descriptor ) != 0) {
-    cout << "cagamos la fruta" << endl;
+  if (close( this->file_descriptor )) {
+    throw runtime_error("Cagamos la fruta");
   }
 }
