@@ -25,7 +25,7 @@ class logger {
     /*
      * Logs the message in the file description using the menthod;
      */
-    void log(std::string method, std::string &message);
+    void log(const std::string &method, const std::string &message);
 
   public:
     /*
@@ -36,22 +36,22 @@ class logger {
     /*
      * Shows an info message in logger.
      */
-    void info(std::string &message);
+    void info(const std::string &message);
 
     /*
      * Shows an warning message in logger.
      */
-    void warn(std::string &message);
+    void warn(const std::string &message);
 
     /*
      * Shows an error message in logger.
      */
-    void debug(std::string &message);
+    void debug(const std::string &message);
 
     /*
      * Shows an error message in logger.
      */
-    void error(std::string &message);
+    void error(const std::string &message);
 
     /*
      * destructor method.

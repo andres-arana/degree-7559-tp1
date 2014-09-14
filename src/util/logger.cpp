@@ -16,7 +16,7 @@ logger::logger() {
   }
 }
 
-void logger::log(string method, string &message) {
+void logger::log(const string &method, const string &message) {
   /* LOCK_SH: Place a shared lock. More than one process may hold a shared lock
    * for a given file at a given time. */
   int locking = flock( this->file_descriptor, LOCK_SH);
@@ -39,19 +39,19 @@ void logger::log(string method, string &message) {
   }
 }
 
-void logger::info(string &message) {
+void logger::info(const string &message) {
   this->log(string("INFO"), message);
 }
 
-void logger::warn(string &message) {
+void logger::warn(const string &message) {
   this->log(string("WARN"), message);
 }
 
-void logger::debug(string &message) {
+void logger::debug(const string &message) {
   this->log(string("DEBUG"), message);
 }
 
-void logger::error(string &message) {
+void logger::error(const string &message) {
   this->log(string("ERROR"), message);
 }
 
