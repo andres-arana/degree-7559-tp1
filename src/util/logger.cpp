@@ -23,7 +23,7 @@ logger::logger() {
 }
 
 void logger::log(const string &method, const string &message) {
-  auto locking = flock( this->file_descriptor, LOCK_SH);
+  auto locking = flock( this->file_descriptor, LOCK_EX);
   if (locking == 0) {
     char buff[80];
     auto now = time(0);
@@ -31,7 +31,7 @@ void logger::log(const string &method, const string &message) {
     strftime(buff, sizeof(buff), "%Y-%m-%d.%X", &tstruct);
 
     stringstream stream;
-    stream << buff << "[" << method << "] - " << message << endl;
+    stream << buff << " PID:" << getpid() << " [" << method << "] - " << message << endl;
     auto buffer = stream.str();
 
     auto res = write(this->file_descriptor, buffer.c_str(), buffer.length());
@@ -40,6 +40,7 @@ void logger::log(const string &method, const string &message) {
     }
 
     auto unlock = flock( this->file_descriptor, LOCK_UN );
+
     if (unlock < 0) {
       this->raise_errno("flock");
     }
