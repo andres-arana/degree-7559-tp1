@@ -13,6 +13,12 @@ namespace util {
     public:
       sync_log();
 
+      sync_log(const sync_log &other) = delete;
+      sync_log &operator=(const sync_log &other) = delete;
+
+      sync_log(sync_log &&other);
+      sync_log &operator=(sync_log &&other);
+
       void info(const std::string &message);
 
       void warn(const std::string &message);

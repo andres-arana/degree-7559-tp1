@@ -10,8 +10,14 @@ namespace util {
       int file_descriptor;
 
     public:
-
+      auto_file_lock();
       explicit auto_file_lock(int file_descriptor);
+
+      auto_file_lock(const auto_file_lock &other) = delete;
+      auto_file_lock &operator=(const auto_file_lock &other) = delete;
+
+      auto_file_lock(auto_file_lock &&other);
+      auto_file_lock &operator=(auto_file_lock &&other);
 
       ~auto_file_lock();
   };

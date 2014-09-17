@@ -3,6 +3,7 @@
 
 #include <sys/types.h>
 #include <string>
+#include <vector>
 
 namespace util {
   class auto_proc {
@@ -10,24 +11,16 @@ namespace util {
       pid_t process_id;
 
     public:
+      auto_proc();
       explicit auto_proc(
-          const std::string &command);
-      explicit auto_proc(
-          const std::string &command, const std::string &arg1);
-      explicit auto_proc(
-          const std::string &command, const std::string &arg1,
-          const std::string &arg2);
-      explicit auto_proc(
-          const std::string &command, const std::string &arg1,
-          const std::string &arg2, const std::string &arg3);
-      explicit auto_proc(
-          const std::string &command, const std::string &arg1,
-          const std::string &arg2, const std::string &arg3,
-          const std::string &arg4);
-      explicit auto_proc(
-          const std::string &command, const std::string &arg1,
-          const std::string &arg2, const std::string &arg3,
-          const std::string &arg4, const std::string &arg5);
+          const std::string &command,
+          const std::vector<std::string> &args);
+
+      auto_proc(const auto_proc &other) = delete;
+      auto_proc &operator=(const auto_proc &other) = delete;
+
+      auto_proc(auto_proc &&other);
+      auto_proc &operator=(auto_proc &&other);
 
       pid_t pid() const;
 

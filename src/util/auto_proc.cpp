@@ -4,93 +4,59 @@
 #include <sys/wait.h>
 
 using namespace util;
+using namespace std;
 
 namespace {
-  int do_fork(const std::string &command) {
+  int do_fork(const string &command, const vector<string> &args) {
     auto result = fork();
 
     if (result < 0) {
       throw syscall_error("fork", command);
+    } else if (result == 0) {
+      vector<const char*> actual_args;
+      actual_args.push_back(command.c_str());
+      for (auto arg : args) {
+        actual_args.push_back(arg.c_str());
+      }
+      actual_args.push_back(nullptr);
+      auto raw_args = const_cast<char * const *>(actual_args.data());
+
+      execv(command.c_str(), raw_args);
+
+      throw syscall_error("execv", command);
     }
 
     return result;
   }
+
+  void do_wait(int process_id) {
+    if (process_id > 0) {
+      int status;
+      waitpid(process_id, &status, 0);
+    }
+  }
 };
 
-auto_proc::auto_proc(
-    const std::string &command) {
-  this->process_id = do_fork(command);
+auto_proc::auto_proc()
+  : process_id(-1) {
 
-  if (this->process_id == 0) {
-    execlp(command.c_str(), command.c_str(), NULL);
-
-    throw syscall_error("execlp", command);
-  }
-}
-
-auto_proc::auto_proc(
-    const std::string &command, const std::string &arg1) {
-  this->process_id = do_fork(command);
-
-  if (this->process_id == 0) {
-    execlp(command.c_str(), command.c_str(), arg1.c_str(), NULL);
-
-    throw syscall_error("execlp", command);
-  }
-}
-
-auto_proc::auto_proc(
-    const std::string &command, const std::string &arg1,
-    const std::string &arg2) {
-  this->process_id = do_fork(command);
-
-  if (this->process_id == 0) {
-    execlp(command.c_str(), command.c_str(), arg1.c_str(), arg2.c_str(), NULL);
-
-    throw syscall_error("execlp", command);
-  }
-}
-
-auto_proc::auto_proc(
-    const std::string &command, const std::string &arg1,
-    const std::string &arg2, const std::string &arg3) {
-  this->process_id = do_fork(command);
-
-  if (this->process_id == 0) {
-    execlp(command.c_str(), command.c_str(), arg1.c_str(), arg2.c_str(),
-        arg3.c_str(), NULL);
-
-    throw syscall_error("execlp", command);
-  }
-}
-
-auto_proc::auto_proc(
-    const std::string &command, const std::string &arg1,
-    const std::string &arg2, const std::string &arg3,
-    const std::string &arg4) {
-  this->process_id = do_fork(command);
-
-  if (this->process_id == 0) {
-    execlp(command.c_str(), command.c_str(), arg1.c_str(), arg2.c_str(),
-        arg3.c_str(), arg4.c_str(), NULL);
-
-    throw syscall_error("execlp", command);
-  }
-}
-
-auto_proc::auto_proc(
-    const std::string &command, const std::string &arg1,
-    const std::string &arg2, const std::string &arg3,
-    const std::string &arg4, const std::string &arg5) {
-  this->process_id = do_fork(command);
-
-  if (this->process_id == 0) {
-    execlp(command.c_str(), command.c_str(), arg1.c_str(), arg2.c_str(),
-        arg3.c_str(), arg4.c_str(), arg5.c_str(),  NULL);
-
-    throw syscall_error("execlp", command);
   }
 
+auto_proc::auto_proc(const string& command, const vector<string> &args)
+  : process_id(::do_fork(command, args)) {
+
+  }
+
+auto_proc::auto_proc(auto_proc &&other)
+  : process_id(other.process_id) {
+    other.process_id = -1;
+  }
+
+auto_proc & auto_proc::operator=(auto_proc &&other) {
+  ::do_wait(this->process_id);
+  this->process_id = other.process_id;
+  other.process_id = -1;
+  return *this;
 }
 
 pid_t auto_proc::pid() const {
@@ -98,6 +64,6 @@ pid_t auto_proc::pid() const {
 }
 
 auto_proc::~auto_proc() {
-  int status;
-  waitpid(this->process_id, &status, 0);
+  ::do_wait(this->process_id);
 }
+

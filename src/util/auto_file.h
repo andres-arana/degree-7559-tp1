@@ -10,7 +10,14 @@ namespace util {
       int file_descriptor;
 
     public:
+      auto_file();
       explicit auto_file(const std::string &filename, int flags);
+
+      auto_file(const auto_file &other) = delete;
+      auto_file & operator=(const auto_file &other) = delete;
+
+      auto_file(auto_file &&other);
+      auto_file &operator=(auto_file &&other);
 
       int fd() const;
 
