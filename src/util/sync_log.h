@@ -3,6 +3,7 @@
 
 #include <string>
 #include "auto_file.h"
+#include "sformat.h"
 
 namespace util {
 
@@ -22,11 +23,31 @@ namespace util {
 
       void info(const std::string &message);
 
+      template<typename... Ts>
+      void info(const std::string &format, const Ts&... ts) {
+        this->info(sformat(format, ts...));
+      }
+
       void warn(const std::string &message);
+
+      template<typename... Ts>
+      void warn(const std::string &format, const Ts&... ts) {
+        this->warn(sformat(format, ts...));
+      }
 
       void debug(const std::string &message);
 
+      template<typename... Ts>
+      void debug(const std::string &format, const Ts&... ts) {
+        this->debug(sformat(format, ts...));
+      }
+
       void error(const std::string &message);
+
+      template<typename... Ts>
+      void error(const std::string &format, const Ts&... ts) {
+        this->error(sformat(format, ts...));
+      }
   };
 
 };

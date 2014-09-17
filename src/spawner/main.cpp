@@ -19,6 +19,8 @@ int main(int argc, char** argv) {
 
   auto processes = atoi(argv[1]);
 
+  log.info("I will spawn $ CHILD processes", processes);
+
   {
     vector<auto_proc> children(processes);
 
