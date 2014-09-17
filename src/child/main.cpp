@@ -3,13 +3,13 @@
 #include <unistd.h>
 
 int main() {
-  util::sync_log log;
+  util::sync_log log("CHILD");
 
-  log.info("Starting CHILD process");
+  log.info("Starting");
 
   sleep(3);
 
-  log.info("CHILD process is finishing");
+  log.info("Finishing");
 
   return EXIT_SUCCESS;
 }

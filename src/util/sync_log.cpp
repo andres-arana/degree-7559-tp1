@@ -23,6 +23,7 @@ namespace {
 
   void do_log(
       const auto_file &file,
+      const string &name,
       const string &level,
       const string what) {
 
@@ -32,6 +33,7 @@ namespace {
     message_stream <<
       humanized_current_time() <<
       " PID:" << getpid() <<
+      " (" << name << ")" << 
       " [" << level << "] - " <<
       what << endl;
 
@@ -42,8 +44,8 @@ namespace {
   }
 };
 
-sync_log::sync_log()
-  : file(::FILENAME, O_WRONLY | O_APPEND | O_CREAT) {
+sync_log::sync_log(const string &name)
+  : file(::FILENAME, O_WRONLY | O_APPEND | O_CREAT), name(name){
 
   }
 
@@ -59,18 +61,18 @@ sync_log &sync_log::operator =(sync_log &&other) {
 }
 
 void sync_log::info(const string &message) {
-  do_log(this->file, "INFO", message);
+  do_log(this->file, this->name, "INFO", message);
 }
 
 void sync_log::warn(const string &message) {
-  do_log(this->file, "WARN", message);
+  do_log(this->file, this->name, "WARN", message);
 }
 
 void sync_log::debug(const string &message) {
-  do_log(this->file, "DEBUG", message);
+  do_log(this->file, this->name, "DEBUG", message);
 }
 
 void sync_log::error(const string &message) {
-  do_log(this->file, "ERROR", message);
+  do_log(this->file, this->name, "ERROR", message);
 }
 

@@ -5,9 +5,9 @@
 using namespace util;
 
 int main() {
-  sync_log log;
+  sync_log log("DIRECTOR");
 
-  log.info("Starting DIRECTOR process");
+  log.info("Starting");
 
   log.info("About to start all controller processes");
 
@@ -20,7 +20,7 @@ int main() {
     log.info("All controller processes spawned, waiting for termination");
   }
 
-  log.info("Controller processes finished, simulation completed");
+  log.info("Finishing");
 
   return EXIT_SUCCESS;
 }

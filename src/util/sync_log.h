@@ -9,9 +9,10 @@ namespace util {
   class sync_log {
     private:
       auto_file file;
+      std::string name;
 
     public:
-      sync_log();
+      sync_log(const std::string &name);
 
       sync_log(const sync_log &other) = delete;
       sync_log &operator=(const sync_log &other) = delete;

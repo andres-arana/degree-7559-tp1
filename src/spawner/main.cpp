@@ -8,12 +8,12 @@ using namespace util;
 using namespace std;
 
 int main(int argc, char** argv) {
-  sync_log log;
+  sync_log log("SPAWNER");
 
-  log.info("Starting SPAWNER process");
+  log.info("Starting");
 
   if (argc < 2) {
-    log.error("SPWANER process not given the amount of children to spawn");
+    log.error("I don't know the amount of processes to spawn");
     return EXIT_FAILURE;
   }
 
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
     log.info("All CHILD processes launched, waiting for termination");
   }
 
-  log.info("All CHILD processes finished");
+  log.info("Finishing");
 
   return EXIT_SUCCESS;
 }
