@@ -1,4 +1,4 @@
-.PHONY: clean doc-preview doc-spell export all doc
+.PHONY: all run doc doc-preview doc-spell srcdoc srcdoc-preview clean export
 
 EXECS=audit carrousel cashier child director spawner
 LIBS=util
@@ -26,6 +26,12 @@ doc-preview: doc
 
 doc-spell: docs/informe.tex
 	aspell -t check docs/informe.tex -d es
+
+srcdoc: | build/srcdoc
+	doxygen doxyfile
+
+srcdoc-preview: srcdoc
+	firefox build/srcdoc/html/index.html
 
 clean:
 	rm -rf build
@@ -76,6 +82,9 @@ $(foreach executable,$(EXECS),$(eval $(call GENERATE_LINK_RUNLES,$(executable)))
 ###############################################################################
 # Documentation building
 ###############################################################################
+build/srcdoc: | build
+	mkdir build/srcdoc
+
 build/doc: | build
 	mkdir build/doc
 
