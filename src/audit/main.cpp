@@ -3,18 +3,16 @@
 using namespace util;
 using namespace std;
 
-namespace {
-  class audit : public util::app {
-    public:
-      explicit audit() :
-        app("AUDIT") { }
+class audit : public util::app {
+  public:
+    explicit audit() :
+      app("AUDIT") { }
 
-    protected:
-      virtual void do_run() override {
-        // TODO: Implement this
-      }
-  };
-}
+  protected:
+    virtual void do_run() override {
+      // TODO: Implement this
+    }
+};
 
-DEFINE_MAIN(::audit);
+DEFINE_MAIN(audit);
 

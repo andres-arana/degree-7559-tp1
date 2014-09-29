@@ -3,18 +3,16 @@
 using namespace util;
 using namespace std;
 
-namespace {
-  class cashier : public util::app {
-    public:
-      explicit cashier() :
-        app("CASHIER") { }
+class cashier : public util::app {
+  public:
+    explicit cashier() :
+      app("CASHIER") { }
 
-    protected:
-      virtual void do_run() override {
+  protected:
+    virtual void do_run() override {
 
-      }
-  };
-}
+    }
+};
 
-DEFINE_MAIN(::cashier);
+DEFINE_MAIN(cashier);
 

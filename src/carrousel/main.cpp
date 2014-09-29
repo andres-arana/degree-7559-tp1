@@ -3,18 +3,16 @@
 using namespace util;
 using namespace std;
 
-namespace {
-  class carrousel : public util::app {
-    public:
-      explicit carrousel() :
-        app("CARROUSEL") { }
+class carrousel : public util::app {
+  public:
+    explicit carrousel() :
+      app("CARROUSEL") { }
 
-    protected:
-      virtual void do_run() override {
+  protected:
+    virtual void do_run() override {
 
-      }
-  };
-}
+    }
+};
 
-DEFINE_MAIN(::carrousel);
+DEFINE_MAIN(carrousel);
 
