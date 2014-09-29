@@ -2,8 +2,6 @@
 #include "util/auto_proc.h"
 #include <cstdlib>
 #include <vector>
-#include <sstream>
-#include <memory>
 
 using namespace util;
 using namespace std;
@@ -25,12 +23,11 @@ int main(int argc, char** argv) {
   vector<string> args;
 
   {
-    vector<shared_ptr<auto_proc>> children(processes);
+    vector<auto_proc> children;
 
     for (int i = 0; i < processes; i++) {
-      auto child = make_shared<auto_proc>("build/exec/child", args);
-      children.push_back(child);
-      log.info("Launched CHILD process with pid $", child->pid());
+      children.emplace_back("build/exec/child", args);
+      log.info("Launched CHILD process $", children.back().pid());
     }
 
     log.info("All CHILD processes launched, waiting for termination");
