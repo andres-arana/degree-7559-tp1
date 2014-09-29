@@ -8,7 +8,7 @@ using namespace std;
 class spawner : public util::app {
   public:
     explicit spawner() :
-      app("spawner"),
+      app("SPAWNER"),
       children("c", "children", "Amount of children", true, 0, "int", args) { }
 
   protected:

@@ -10,7 +10,7 @@ auto_file_lock::auto_file_lock()
 
 auto_file_lock::auto_file_lock(int file_descriptor)
   : file_descriptor(file_descriptor) {
-    syscalls::checked_flock(this->file_descriptor);
+    syscalls::checked_flock(file_descriptor);
   }
 
 auto_file_lock::auto_file_lock(auto_file_lock &&other)
@@ -19,13 +19,13 @@ auto_file_lock::auto_file_lock(auto_file_lock &&other)
   }
 
 auto_file_lock &auto_file_lock::operator=(auto_file_lock &&other) {
-  syscalls::checked_funlock(this->file_descriptor);
-  this->file_descriptor = other.file_descriptor;
+  syscalls::checked_funlock(file_descriptor);
+  file_descriptor = other.file_descriptor;
   other.file_descriptor = -1;
   return *this;
 }
 
 auto_file_lock::~auto_file_lock() {
-  syscalls::checked_funlock(this->file_descriptor);
+  syscalls::checked_funlock(file_descriptor);
 }
 

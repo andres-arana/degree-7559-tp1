@@ -25,16 +25,16 @@ auto_file::auto_file(auto_file &&other)
   }
 
 auto_file &auto_file::operator=(auto_file &&other) {
-  syscalls::checked_close(this->file_descriptor);
-  this->file_descriptor = other.file_descriptor;
+  syscalls::checked_close(file_descriptor);
+  file_descriptor = other.file_descriptor;
   other.file_descriptor = -1;
   return *this;
 }
 
 int auto_file::fd() const {
-  return this->file_descriptor;
+  return file_descriptor;
 }
 
 auto_file::~auto_file() {
-  syscalls::checked_close(this->file_descriptor);
+  syscalls::checked_close(file_descriptor);
 }
