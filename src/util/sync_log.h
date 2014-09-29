@@ -21,6 +21,8 @@ namespace util {
       sync_log(sync_log &&other);
       sync_log &operator=(sync_log &&other);
 
+      void separator();
+
       void info(const std::string &message);
 
       template<typename... Ts>

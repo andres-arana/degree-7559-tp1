@@ -7,6 +7,7 @@ using namespace util;
 int main() {
   sync_log log("DIRECTOR");
 
+  log.separator();
   log.info("Starting");
 
   log.info("About to start all controller processes");
@@ -17,7 +18,7 @@ int main() {
     auto_proc cashier("build/exec/cashier", {});
 
     {
-      auto_proc spawner("build/exec/spawner", { "10" });
+      auto_proc spawner("build/exec/spawner", { "5" });
     }
 
     log.info("All controller processes spawned, waiting for termination");

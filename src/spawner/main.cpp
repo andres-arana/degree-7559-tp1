@@ -22,11 +22,13 @@ int main(int argc, char** argv) {
 
   log.info("I will spawn $ CHILD processes", processes);
 
+  vector<string> args;
+
   {
     vector<shared_ptr<auto_proc>> children(processes);
 
     for (int i = 0; i < processes; i++) {
-      shared_ptr<auto_proc> child(new auto_proc("build/exec/child", {}));
+      auto child = make_shared<auto_proc>("build/exec/child", args);
       children.push_back(child);
       log.info("Launched CHILD process with pid $", child->pid());
     }

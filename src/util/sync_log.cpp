@@ -1,10 +1,8 @@
 #include "sync_log.h"
 #include "auto_file.h"
 #include "auto_file_lock.h"
-#include "syscall_error.h"
+#include "syscalls.h"
 #include <ctime>
-#include <unistd.h>
-#include <sstream>
 
 using namespace util;
 using namespace std;
@@ -12,7 +10,7 @@ using namespace std;
 namespace {
   const string FILENAME = "concucalesita.log";
 
-  string humanized_current_time() {
+  string human_current_time() {
     char humanized_time[80];
     auto now = time(0);
     auto local = localtime(&now);
@@ -29,18 +27,11 @@ namespace {
 
     auto_file_lock lock(file.fd());
 
-    stringstream message_stream;
-    message_stream <<
-      humanized_current_time() <<
-      " PID:" << getpid() <<
-      " (" << name << ")" << 
-      " [" << level << "] - " <<
-      what << endl;
+    auto message = sformat(
+        "$ PID: $ ($) [$]: $\n",
+        human_current_time(), syscalls::checked_getpid(), name, level, what);
 
-    auto buffer = message_stream.str();
-    if (write(file.fd(), buffer.c_str(), buffer.length()) < 0) {
-      throw syscall_error("write");
-    }
+    syscalls::checked_write(file.fd(), message);
   }
 };
 
@@ -59,6 +50,10 @@ sync_log &sync_log::operator =(sync_log &&other) {
 
   return *this;
 }
+
+void sync_log::separator() {
+  do_log(this->file, this->name, "INFO", "**********************************");
+};
 
 void sync_log::info(const string &message) {
   do_log(this->file, this->name, "INFO", message);
