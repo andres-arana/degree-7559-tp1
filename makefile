@@ -16,7 +16,6 @@ INCLUDES=-I src
 all: $(EXECS_PATHS)
 
 run: all
-	rm -f concucalesita.log
 	build/exec/director
 
 doc: build/doc/informe.pdf

@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <vector>
 #include <sstream>
+#include <memory>
 
 using namespace util;
 using namespace std;
@@ -22,11 +23,12 @@ int main(int argc, char** argv) {
   log.info("I will spawn $ CHILD processes", processes);
 
   {
-    vector<auto_proc> children(processes);
+    vector<shared_ptr<auto_proc>> children(processes);
 
     for (int i = 0; i < processes; i++) {
-      children.push_back(auto_proc("build/exec/child", {}));
-      log.info("Launched CHILD process");
+      shared_ptr<auto_proc> child(new auto_proc("build/exec/child", {}));
+      children.push_back(child);
+      log.info("Launched CHILD process with pid $", child->pid());
     }
 
     log.info("All CHILD processes launched, waiting for termination");

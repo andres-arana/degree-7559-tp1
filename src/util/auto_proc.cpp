@@ -7,18 +7,27 @@ using namespace util;
 using namespace std;
 
 namespace {
+  vector<const char *> make_execv_args(
+      const string &command,
+      const vector<string> &args) {
+
+    vector<const char *> result;
+    result.push_back(command.c_str());
+    for (auto arg : args) {
+      result.push_back(arg.c_str());
+    }
+    result.push_back(nullptr);
+
+    return result;
+  }
+
   int do_fork(const string &command, const vector<string> &args) {
     auto result = fork();
 
     if (result < 0) {
       throw syscall_error("fork", command);
     } else if (result == 0) {
-      vector<const char*> actual_args;
-      actual_args.push_back(command.c_str());
-      for (auto arg : args) {
-        actual_args.push_back(arg.c_str());
-      }
-      actual_args.push_back(nullptr);
+      auto actual_args = make_execv_args(command, args);
       auto raw_args = const_cast<char * const *>(actual_args.data());
 
       execv(command.c_str(), raw_args);
