@@ -1,15 +1,23 @@
-#include "util/sync_log.h"
-#include <cstdlib>
+#include "util/app.h"
 #include <unistd.h>
 
-int main() {
-  util::sync_log log("CHILD");
+using namespace util;
+using namespace std;
 
-  log.info("Starting");
+namespace {
+  class child : public util::app {
+    public:
+      explicit child() :
+        app("CHILD") { }
 
-  sleep(3);
-
-  log.info("Finishing");
-
-  return EXIT_SUCCESS;
+    protected:
+      virtual void do_run() override {
+        log.info("About to sleep for 3 seconds");
+        sleep(3);
+        log.info("Woke up");
+      }
+  };
 }
+
+DEFINE_MAIN(::child);
+

@@ -1,30 +1,41 @@
-#include "util/sync_log.h"
 #include "util/auto_proc.h"
-#include <cstdlib>
+#include "util/app.h"
 
 using namespace util;
+using namespace std;
 
-int main() {
-  sync_log log("DIRECTOR");
+namespace {
+  class director : public util::app {
+    public:
+      explicit director() :
+        app("DIRECTOR"),
+        children("c", "children", "Amount of children", true, 0, "int", args) { }
 
-  log.separator();
-  log.info("Starting");
+    protected:
+      virtual void do_run() override {
+        log.separator();
+        log.info("About to start all controller processes");
 
-  log.info("About to start all controller processes");
+        {
+          auto_proc audit("build/exec/audit");
+          auto_proc carrousel("build/exec/carrousel");
+          auto_proc cashier("build/exec/cashier");
 
-  {
-    auto_proc audit("build/exec/audit", {});
-    auto_proc carrousel("build/exec/carrousel", {});
-    auto_proc cashier("build/exec/cashier", {});
+          {
+            auto_proc spawner("build/exec/spawner", "-c", children.getValue());
 
-    {
-      auto_proc spawner("build/exec/spawner", { "5" });
-    }
+            log.info("All controller processes spawned, waiting for termination");
+          }
 
-    log.info("All controller processes spawned, waiting for termination");
-  }
+        }
 
-  log.info("Finishing");
+        log.info("All controller processes finished");
+      }
 
-  return EXIT_SUCCESS;
+    private:
+      TCLAP::ValueArg<int> children;
+  };
 }
+
+DEFINE_MAIN(::director);
+

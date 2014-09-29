@@ -1,14 +1,20 @@
-#include "util/sync_log.h"
-#include <cstdlib>
+#include "util/app.h"
 
 using namespace util;
+using namespace std;
 
-int main() {
-  sync_log log("CARROUSEL");
+namespace {
+  class carrousel : public util::app {
+    public:
+      explicit carrousel() :
+        app("CARROUSEL") { }
 
-  log.info("Starting");
+    protected:
+      virtual void do_run() override {
 
-  log.info("Finishing");
-
-  return EXIT_SUCCESS;
+      }
+  };
 }
+
+DEFINE_MAIN(::carrousel);
+

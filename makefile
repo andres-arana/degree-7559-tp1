@@ -8,7 +8,7 @@ LIBS_PATHS=$(addprefix build/libs/, $(LIBS))
 
 CC=g++
 CCFLAGS=-std=c++11 -Wall -Wextra -g -MP -MMD
-INCLUDES=-I src
+INCLUDES=-I src -I libs
 
 ###############################################################################
 # Helpers and administrative tasks
@@ -16,7 +16,7 @@ INCLUDES=-I src
 all: $(EXECS_PATHS)
 
 run: all
-	build/exec/director
+	build/exec/director -c 10
 
 doc: build/doc/informe.pdf
 

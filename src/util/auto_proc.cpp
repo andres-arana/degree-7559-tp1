@@ -9,6 +9,11 @@ auto_proc::auto_proc()
 
   }
 
+auto_proc::auto_proc(const string &command)
+  : auto_proc(command, {}){
+
+}
+
 auto_proc::auto_proc(const string& command, const vector<string> &args) {
   this->process_id = syscalls::checked_fork(command);
 
@@ -31,6 +36,11 @@ auto_proc & auto_proc::operator=(auto_proc &&other) {
 
 pid_t auto_proc::pid() const {
   return this->process_id;
+}
+
+void auto_proc::signal(int signal) {
+  syscalls::checked_kill(this->process_id, signal);
+
 }
 
 auto_proc::~auto_proc() {

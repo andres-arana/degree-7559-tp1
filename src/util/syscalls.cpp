@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <sys/file.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 using namespace util;
 using namespace std;
@@ -91,7 +92,7 @@ void syscalls::checked_execv(const string &command, const vector<string> &args) 
   throw syscalls::error("execv", command);
 }
 
-int syscalls::checked_wait(int pid) {
+int syscalls::checked_wait(pid_t pid) {
   int status;
   if (pid > 0 && waitpid(pid, &status, 0) < 0) {
     throw syscalls::error("waitpid");
@@ -100,7 +101,7 @@ int syscalls::checked_wait(int pid) {
   return status;
 }
 
-int syscalls::checked_getpid() {
+pid_t syscalls::checked_getpid() {
   auto result = getpid();
 
   if (result < 0) {
@@ -113,5 +114,11 @@ int syscalls::checked_getpid() {
 void syscalls::checked_write(int fd, const string &what) {
   if (write(fd, what.c_str(), what.length()) < 0) {
     throw syscalls::error("write");
+  }
+}
+
+void syscalls::checked_kill(pid_t pid, int signal) {
+  if (kill(pid, signal)) {
+    throw syscalls::error("kill");
   }
 }

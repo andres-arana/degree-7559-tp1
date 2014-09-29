@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <sys/types.h>
 
 namespace util {
   namespace syscalls {
@@ -33,11 +34,11 @@ namespace util {
     void checked_execv(
         const std::string &command, const std::vector<std::string> &args);
 
-    int checked_wait(int pid);
+    int checked_wait(pid_t pid);
 
-    int checked_getpid();
+    pid_t checked_getpid();
 
-
+    void checked_kill(pid_t pid, int signal);
   };
 };
 

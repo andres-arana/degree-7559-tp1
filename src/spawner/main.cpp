@@ -1,39 +1,34 @@
-#include "util/sync_log.h"
 #include "util/auto_proc.h"
-#include <cstdlib>
+#include "util/app.h"
 #include <vector>
 
 using namespace util;
 using namespace std;
 
-int main(int argc, char** argv) {
-  sync_log log("SPAWNER");
+namespace {
+  class spawner : public util::app {
+    public:
+      explicit spawner() :
+        app("spawner"),
+        children("c", "children", "Amount of children", true, 0, "int", args) { }
 
-  log.info("Starting");
+    protected:
+      virtual void do_run() override {
+        log.info("I will spawn $ CHILD processes", children.getValue());
 
-  if (argc < 2) {
-    log.error("I don't know the amount of processes to spawn");
-    return EXIT_FAILURE;
-  }
+        vector<auto_proc> processes;
 
-  auto processes = atoi(argv[1]);
+        for (int i = 0; i < children.getValue(); i++) {
+          processes.emplace_back("build/exec/child");
+          log.info("Launched CHILD process $", processes.back().pid());
+        }
 
-  log.info("I will spawn $ CHILD processes", processes);
+        log.info("All CHILD processes launched, waiting for termination");
+      }
 
-  vector<string> args;
-
-  {
-    vector<auto_proc> children;
-
-    for (int i = 0; i < processes; i++) {
-      children.emplace_back("build/exec/child", args);
-      log.info("Launched CHILD process $", children.back().pid());
-    }
-
-    log.info("All CHILD processes launched, waiting for termination");
-  }
-
-  log.info("Finishing");
-
-  return EXIT_SUCCESS;
+    private:
+      TCLAP::ValueArg<int> children;
+  };
 }
+
+DEFINE_MAIN(::spawner);

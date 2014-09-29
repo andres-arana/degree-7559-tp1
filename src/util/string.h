@@ -1,13 +1,14 @@
-#ifndef __UTIL_SFORMAT_H_INCLUDED__
-#define __UTIL_SFORMAT_H_INCLUDED__
+#ifndef __UTIL_STRING_H_INCLUDED__
+#define __UTIL_STRING_H_INCLUDED__
 
 /** @file
  *
- * @brief Defines typesafe string formatting functions to use in logging
+ * @brief Defines typesafe string formatting functions and utilities
  */
 
 #include <string>
 #include <sstream>
+#include <vector>
 
 namespace util {
 
@@ -60,6 +61,20 @@ namespace util {
     new_format.replace(format.find_first_of('$'), 1, value_as_string.str());
 
     return sformat(new_format, ts...);
+  }
+
+  std::vector<std::string> svector(std::vector<std::string> out);
+
+  template<typename T, typename... Ts>
+  std::vector<std::string> svector(std::vector<std::string> out, const T& value, const Ts&... ts) {
+    out.push_back(sformat("$", value));
+    return svector(std::move(out), ts...);
+  }
+
+  template<typename T, typename... Ts>
+  std::vector<std::string> svector(const T& value, const Ts&... ts) {
+    std::vector<std::string> result { sformat("$", value) };
+    return svector(std::move(result), ts...);
   }
 
 };

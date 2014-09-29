@@ -1,14 +1,20 @@
-#include "util/sync_log.h"
-#include <cstdlib>
+#include "util/app.h"
 
 using namespace util;
+using namespace std;
 
-int main() {
-  sync_log log("AUDIT");
+namespace {
+  class audit : public util::app {
+    public:
+      explicit audit() :
+        app("AUDIT") { }
 
-  log.info("Starting");
-
-  log.info("Finishing");
-
-  return EXIT_SUCCESS;
+    protected:
+      virtual void do_run() override {
+        // TODO: Implement this
+      }
+  };
 }
+
+DEFINE_MAIN(::audit);
+

@@ -2,8 +2,8 @@
 #define __UTIL_SYNC_LOG_H_INCLUDED__
 
 #include <string>
-#include "auto_file.h"
-#include "sformat.h"
+#include "util/auto_file.h"
+#include "util/string.h"
 
 namespace util {
 
