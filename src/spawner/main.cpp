@@ -18,7 +18,7 @@ class spawner : public util::app {
       vector<auto_proc> processes;
 
       for (int i = 0; i < children.getValue(); i++) {
-        processes.emplace_back("build/exec/child");
+        processes.emplace_back(false, "build/exec/child");
         log.info("Launched CHILD process $", processes.back().pid());
       }
 

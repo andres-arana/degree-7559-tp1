@@ -16,16 +16,19 @@ class director : public util::app {
       log.info("About to start all controller processes");
 
       {
-        auto_proc audit("build/exec/audit");
-        auto_proc carrousel("build/exec/carrousel");
-        auto_proc cashier("build/exec/cashier");
+        auto_proc audit(true, "build/exec/audit");
+        log.info("Started AUDIT process with id $", audit.pid());
+
+        auto_proc carrousel(true, "build/exec/carrousel");
+        log.info("Started CARROUSEL process with id $", carrousel.pid());
+
+        auto_proc cashier(true, "build/exec/cashier");
+        log.info("Started CASHIER process with id $", cashier.pid());
 
         {
-          auto_proc spawner("build/exec/spawner", "-c", children.getValue());
-
-          log.info("All controller processes spawned, waiting for termination");
+          auto_proc spawner(false, "build/exec/spawner", "-c", children.getValue());
+          log.info("Started SPAWNER process with id $", spawner.pid());
         }
-
       }
 
       log.info("All controller processes finished");

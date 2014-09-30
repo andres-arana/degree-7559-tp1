@@ -1,4 +1,5 @@
 #include "syscalls.h"
+#include <cstring>
 #include <unistd.h>
 #include <sstream>
 #include <errno.h>
@@ -120,5 +121,17 @@ void syscalls::checked_write(int fd, const string &what) {
 void syscalls::checked_kill(pid_t pid, int signal) {
   if (kill(pid, signal)) {
     throw syscalls::error("kill");
+  }
+}
+
+void syscalls::checked_sigaction(int signal, sighandler_t handler) {
+  struct sigaction action;
+  memset(&action, 0, sizeof(action));
+  action.sa_handler = handler;
+  sigemptyset(&action.sa_mask);
+  sigaddset(&action.sa_mask, signal);
+
+  if (sigaction(signal, &action, nullptr)) {
+    throw syscalls::error("sigaction");
   }
 }

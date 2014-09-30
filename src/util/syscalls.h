@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdexcept>
 #include <sys/types.h>
+#include <signal.h>
 
 namespace util {
   namespace syscalls {
@@ -39,6 +40,8 @@ namespace util {
     pid_t checked_getpid();
 
     void checked_kill(pid_t pid, int signal);
+
+    void checked_sigaction(int signal, sighandler_t handler);
   };
 };
 

@@ -1,0 +1,43 @@
+#include "util/auto_signal.h"
+#include "util/syscalls.h"
+#include <map>
+
+using namespace util;
+using namespace std;
+
+namespace {
+  map<int, function<void()>> handlers;
+
+  void dispatch(int signal) {
+    auto handler = handlers.find(signal);
+
+    if (handler != handlers.end()) {
+      handler->second();
+    }
+  }
+};
+
+auto_signal::auto_signal(int signal, function<void()> handler)
+  : signal(signal) {
+
+    auto installed_handler = handlers.find(signal);
+
+    if (installed_handler != handlers.end()) {
+      throw runtime_error("You are already capturing this signal");
+    }
+
+    handlers[signal] = handler;
+
+    syscalls::checked_sigaction(signal, ::dispatch);
+  }
+
+auto_signal::~auto_signal() {
+  auto handler = handlers.find(signal);
+
+  if (handler != handlers.end()) {
+    handlers.erase(handler);
+  }
+
+  syscalls::checked_sigaction(signal, SIG_DFL);
+}
+
