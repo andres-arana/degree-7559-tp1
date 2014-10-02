@@ -12,6 +12,13 @@
 
 namespace util {
 
+  template<typename T>
+  std::string string_cast(const T &value) {
+    std::stringstream result;
+    result << value;
+    return result.str();
+  }
+
   /** Base case for the util::sformat() function when no additional arguments
    * are provided. This function is used in recursive parameter expansion as
    * the base, parameterless control case. This means that the string being
@@ -54,11 +61,8 @@ namespace util {
       const T& value,
       const Ts&... ts) {
 
-    std::stringstream value_as_string;
-    value_as_string << value;
-
     std::string new_format(format);
-    new_format.replace(format.find_first_of('$'), 1, value_as_string.str());
+    new_format.replace(format.find_first_of('$'), 1, string_cast(value));
 
     return sformat(new_format, ts...);
   }
@@ -67,13 +71,13 @@ namespace util {
 
   template<typename T, typename... Ts>
   std::vector<std::string> svector(std::vector<std::string> out, const T& value, const Ts&... ts) {
-    out.push_back(sformat("$", value));
+    out.push_back(string_cast(value));
     return svector(std::move(out), ts...);
   }
 
   template<typename T, typename... Ts>
   std::vector<std::string> svector(const T& value, const Ts&... ts) {
-    std::vector<std::string> result { sformat("$", value) };
+    std::vector<std::string> result { string_cast(value) };
     return svector(std::move(result), ts...);
   }
 
