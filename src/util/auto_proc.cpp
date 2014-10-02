@@ -20,10 +20,10 @@ auto_proc::auto_proc(
     const vector<string> &args)
   : interrupt(interrupt) {
 
-    process_id = syscalls::checked_fork(command);
+    process_id = syscalls::fork(command);
 
     if (process_id == 0) {
-      syscalls::checked_execv(command, args);
+      syscalls::execv(command, args);
     }
   }
 
@@ -33,7 +33,7 @@ auto_proc::auto_proc(auto_proc &&other)
   }
 
 auto_proc & auto_proc::operator=(auto_proc &&other) {
-  syscalls::checked_wait(process_id);
+  syscalls::wait(process_id);
   process_id = other.process_id;
   interrupt = other.interrupt;
   other.process_id = -1;
@@ -45,7 +45,7 @@ pid_t auto_proc::pid() const {
 }
 
 void auto_proc::signal(int signal) {
-  syscalls::checked_kill(process_id, signal);
+  syscalls::kill(process_id, signal);
 }
 
 auto_proc::~auto_proc() {
@@ -53,6 +53,6 @@ auto_proc::~auto_proc() {
     signal(SIGINT);
   }
 
-  syscalls::checked_wait(process_id);
+  syscalls::wait(process_id);
 }
 

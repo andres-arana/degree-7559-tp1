@@ -20,28 +20,28 @@ namespace util {
             const std::string &context);
     };
 
-    int checked_open(const std::string &filename, int flags, int permissions);
+    int open(const std::string &filename, int flags, int permissions);
 
-    void checked_write(int fd, const std::string &what);
+    void write(int fd, const std::string &what);
 
-    void checked_close(int fd);
+    void close(int fd);
 
-    void checked_flock(int fd);
+    void flock(int fd);
 
-    void checked_funlock(int fd);
+    void funlock(int fd);
 
-    int checked_fork(const std::string &command);
+    int fork(const std::string &command);
 
-    void checked_execv(
+    void execv(
         const std::string &command, const std::vector<std::string> &args);
 
-    int checked_wait(pid_t pid);
+    int wait(pid_t pid);
 
-    pid_t checked_getpid();
+    pid_t getpid();
 
-    void checked_kill(pid_t pid, int signal);
+    void kill(pid_t pid, int signal);
 
-    void checked_sigaction(int signal, sighandler_t handler);
+    void sigaction(int signal, sighandler_t handler);
   };
 };
 

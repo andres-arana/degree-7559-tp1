@@ -34,9 +34,9 @@ syscalls::error::error(const string &syscall)
   }
 
 
-void syscalls::checked_close(int fd) {
+void syscalls::close(int fd) {
   if (fd > 0) {
-    auto result = close(fd);
+    auto result = ::close(fd);
 
     if (result < 0) {
       throw syscalls::error("close");
@@ -45,10 +45,10 @@ void syscalls::checked_close(int fd) {
 
 }
 
-int syscalls::checked_open(
+int syscalls::open(
     const string &filename, int flags, int permissions) {
 
-  auto result = open(filename.c_str(), flags, permissions);
+  auto result = ::open(filename.c_str(), flags, permissions);
 
   if (result < 0) {
     throw syscalls::error("open", filename);
@@ -57,20 +57,20 @@ int syscalls::checked_open(
   return result;
 }
 
-void syscalls::checked_flock(int fd) {
-  if (fd > 0 && flock(fd, LOCK_EX)) {
+void syscalls::flock(int fd) {
+  if (fd > 0 && ::flock(fd, LOCK_EX)) {
     throw syscalls::error("flock", "LOCK_EX");
   }
 }
 
-void syscalls::checked_funlock(int fd) {
-  if (fd > 0 && flock(fd, LOCK_UN)) {
+void syscalls::funlock(int fd) {
+  if (fd > 0 && ::flock(fd, LOCK_UN)) {
     throw syscalls::error("flock", "LOCK_UN");
   }
 }
 
-int syscalls::checked_fork(const string &command) {
-  auto result = fork();
+int syscalls::fork(const string &command) {
+  auto result = ::fork();
 
   if (result < 0) {
     throw syscalls::error("fork", command);
@@ -79,7 +79,7 @@ int syscalls::checked_fork(const string &command) {
   return result;
 }
 
-void syscalls::checked_execv(const string &command, const vector<string> &args) {
+void syscalls::execv(const string &command, const vector<string> &args) {
   vector<const char *> actual_args;
   actual_args.push_back(command.c_str());
   for (auto arg : args) {
@@ -88,22 +88,22 @@ void syscalls::checked_execv(const string &command, const vector<string> &args) 
   actual_args.push_back(nullptr);
   auto raw_args = const_cast<char * const *>(actual_args.data());
 
-  execv(command.c_str(), raw_args);
+  ::execv(command.c_str(), raw_args);
 
   throw syscalls::error("execv", command);
 }
 
-int syscalls::checked_wait(pid_t pid) {
+int syscalls::wait(pid_t pid) {
   int status;
-  if (pid > 0 && waitpid(pid, &status, 0) < 0) {
+  if (pid > 0 && ::waitpid(pid, &status, 0) < 0) {
     throw syscalls::error("waitpid");
   }
 
   return status;
 }
 
-pid_t syscalls::checked_getpid() {
-  auto result = getpid();
+pid_t syscalls::getpid() {
+  auto result = ::getpid();
 
   if (result < 0) {
     throw syscalls::error("getpid");
@@ -112,26 +112,26 @@ pid_t syscalls::checked_getpid() {
   return result;
 }
 
-void syscalls::checked_write(int fd, const string &what) {
-  if (write(fd, what.c_str(), what.length()) < 0) {
+void syscalls::write(int fd, const string &what) {
+  if (::write(fd, what.c_str(), what.length()) < 0) {
     throw syscalls::error("write");
   }
 }
 
-void syscalls::checked_kill(pid_t pid, int signal) {
-  if (kill(pid, signal)) {
+void syscalls::kill(pid_t pid, int signal) {
+  if (::kill(pid, signal)) {
     throw syscalls::error("kill");
   }
 }
 
-void syscalls::checked_sigaction(int signal, sighandler_t handler) {
+void syscalls::sigaction(int signal, sighandler_t handler) {
   struct sigaction action;
   memset(&action, 0, sizeof(action));
   action.sa_handler = handler;
-  sigemptyset(&action.sa_mask);
-  sigaddset(&action.sa_mask, signal);
+  ::sigemptyset(&action.sa_mask);
+  ::sigaddset(&action.sa_mask, signal);
 
-  if (sigaction(signal, &action, nullptr)) {
+  if (::sigaction(signal, &action, nullptr)) {
     throw syscalls::error("sigaction");
   }
 }

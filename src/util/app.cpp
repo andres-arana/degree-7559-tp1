@@ -4,19 +4,26 @@ using namespace std;
 using namespace util;
 
 app::app(const string& name)
-  : log(name), args(name) {
-  
+  : log(name),
+  args(name),
+  log_level("l", "loglevel", "Log level to use", true, 0, "int", args) {
+
   }
 
 int app::run(int argc, char** argv) {
-  log.info("Starting");
-
   args.parse(argc, argv);
+
+  log.set_level(log_level.getValue());
+
+  log.debug("Starting");
 
   do_run();
 
-  log.info("Terminating");
+  log.debug("Terminating");
 
   return EXIT_SUCCESS;
 }
 
+unsigned int app::configured_log_level() {
+  return static_cast<unsigned int>(log_level.getValue());
+}

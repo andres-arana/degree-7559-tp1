@@ -11,7 +11,9 @@ class child : public util::app {
 
   protected:
     virtual void do_run() override {
+      log.info("A new child has arrived!");
       sleep(5);
+      log.info("The child is leaving");
     }
 };
 

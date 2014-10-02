@@ -14,16 +14,16 @@ class carrousel : public util::app {
 
   protected:
     virtual void do_run() override {
-      log.info("Starting check loop");
+      log.debug("Starting check loop");
 
       while (!halt) {
         // TODO: Implement carrousel process, simulated for now
-        log.info("Before going to sleep");
+        log.debug("Before going to sleep");
         sleep(1);
-        log.info("Woke up!");
+        log.debug("Woke up!");
       }
 
-      log.info("Halt was set, terminating");
+      log.debug("Halt was set, terminating");
     }
 
   private:

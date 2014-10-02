@@ -29,45 +29,54 @@ namespace {
 
     auto message = sformat(
         "$ PID: $ ($) [$]: $\n",
-        human_current_time(), syscalls::checked_getpid(), name, level, what);
+        human_current_time(), syscalls::getpid(), name, level, what);
 
-    syscalls::checked_write(file.fd(), message);
+    syscalls::write(file.fd(), message);
   }
 };
 
 sync_log::sync_log(const string &name)
-  : file(::FILENAME, O_WRONLY | O_APPEND | O_CREAT), name(name){
+  : file(::FILENAME, O_WRONLY | O_APPEND | O_CREAT),
+  name(name),
+  log_level(sync_log::level::DEBUG) {
 
   }
 
-sync_log::sync_log(sync_log &&other)
-  : file(move(other.file)) {
+void sync_log::set_level(sync_log::level value) {
+  log_level = value;
+}
 
-  }
-
-sync_log &sync_log::operator =(sync_log &&other) {
-  file = move(other.file);
-
-  return *this;
+void sync_log::set_level(unsigned int value) {
+  log_level = static_cast<sync_log::level>(value);
 }
 
 void sync_log::separator() {
-  do_log(file, name, "INFO", "**********************************");
+  syscalls::write(file.fd(), "\n");
+  syscalls::write(file.fd(), "\n");
+  syscalls::write(file.fd(), "\n");
 };
 
 void sync_log::info(const string &message) {
-  do_log(file, name, "INFO", message);
+  if (log_level <= sync_log::level::INFO) {
+    do_log(file, name, "INFO", message);
+  }
 }
 
 void sync_log::warn(const string &message) {
-  do_log(file, name, "WARN", message);
+  if (log_level <= sync_log::level::WARN) {
+    do_log(file, name, "WARN", message);
+  }
 }
 
 void sync_log::debug(const string &message) {
-  do_log(file, name, "DEBUG", message);
+  if (log_level <= sync_log::level::DEBUG) {
+    do_log(file, name, "DEBUG", message);
+  }
 }
 
 void sync_log::error(const string &message) {
-  do_log(file, name, "ERROR", message);
+  if (log_level <= sync_log::level::ERROR) {
+    do_log(file, name, "ERROR", message);
+  }
 }
 

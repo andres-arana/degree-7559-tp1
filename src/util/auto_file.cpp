@@ -15,7 +15,7 @@ auto_file::auto_file()
 
 auto_file::auto_file(const string &filename, int flags)
   : file_descriptor(
-      syscalls::checked_open(filename, flags, ::FILE_PERMISSIONS)) {
+      syscalls::open(filename, flags, ::FILE_PERMISSIONS)) {
 
   }
 
@@ -25,7 +25,7 @@ auto_file::auto_file(auto_file &&other)
   }
 
 auto_file &auto_file::operator=(auto_file &&other) {
-  syscalls::checked_close(file_descriptor);
+  syscalls::close(file_descriptor);
   file_descriptor = other.file_descriptor;
   other.file_descriptor = -1;
   return *this;
@@ -36,5 +36,5 @@ int auto_file::fd() const {
 }
 
 auto_file::~auto_file() {
-  syscalls::checked_close(file_descriptor);
+  syscalls::close(file_descriptor);
 }

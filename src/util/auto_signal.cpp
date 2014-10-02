@@ -28,7 +28,7 @@ auto_signal::auto_signal(int signal, function<void()> handler)
 
     handlers[signal] = handler;
 
-    syscalls::checked_sigaction(signal, ::dispatch);
+    syscalls::sigaction(signal, ::dispatch);
   }
 
 auto_signal::~auto_signal() {
@@ -38,6 +38,6 @@ auto_signal::~auto_signal() {
     handlers.erase(handler);
   }
 
-  syscalls::checked_sigaction(signal, SIG_DFL);
+  syscalls::sigaction(signal, SIG_DFL);
 }
 
