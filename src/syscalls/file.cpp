@@ -2,7 +2,6 @@
 #include <sys/file.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
 #include <unistd.h>
 
 using namespace std;
@@ -63,14 +62,18 @@ void syscalls::close(int fd) {
   }
 }
 
-void syscalls::flock(int fd) {
-  if (fd > 0 && ::flock(fd, LOCK_EX)) {
-    throw syscalls::error("flock", "LOCK_EX");
+void syscalls::flock(int fd, struct flock fl) {
+  fl.l_type = F_WRLCK;
+
+  if (fd > 0 && ::fcntl( fd, F_SETLKW, &(fl) )) {
+    throw syscalls::error("fcntl", "F_SETLKW");
   }
 }
 
-void syscalls::funlock(int fd) {
-  if (fd > 0 && ::flock(fd, LOCK_UN)) {
-    throw syscalls::error("flock", "LOCK_UN");
+void syscalls::funlock(int fd, struct flock fl) {
+  fl.l_type = F_UNLCK;
+
+  if (fd > 0 && ::fcntl( fd, F_SETLK, &(fl) )) {
+    throw syscalls::error("fcntl", "F_SETLK");
   }
 }
