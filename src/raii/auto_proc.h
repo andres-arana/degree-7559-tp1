@@ -1,5 +1,5 @@
-#ifndef __UTIL__AUTO_PROC_H_INCLUDED__
-#define __UTIL__AUTO_PROC_H_INCLUDED__
+#ifndef __RAII__AUTO_PROC_H_INCLUDED__
+#define __RAII__AUTO_PROC_H_INCLUDED__
 
 #include <sys/types.h>
 #include <signal.h>
@@ -7,12 +7,8 @@
 #include <vector>
 #include "util/string.h"
 
-namespace util {
+namespace raii {
   class auto_proc {
-    private:
-      pid_t process_id;
-      bool interrupt;
-
     public:
       auto_proc();
 
@@ -29,7 +25,8 @@ namespace util {
       explicit auto_proc(
           bool interrupt,
           const std::string &command,
-          const Ts&... ts) : auto_proc(interrupt, command, svector(ts...)) { }
+          const Ts&... ts)
+      : auto_proc(interrupt, command, util::svector(ts...)) { }
 
       auto_proc(const auto_proc &other) = delete;
       auto_proc &operator=(const auto_proc &other) = delete;
@@ -42,7 +39,11 @@ namespace util {
       void signal(int signal);
 
       ~auto_proc();
+
+    private:
+      pid_t process_id;
+      bool interrupt;
   };
-};
+}
 
 #endif

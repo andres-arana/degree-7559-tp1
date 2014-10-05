@@ -1,10 +1,9 @@
 .PHONY: all run doc doc-preview doc-spell srcdoc srcdoc-preview clean export
 
 EXECS=audit carrousel cashier child director spawner
-LIBS=util
+LIBS=util raii syscalls
 
 EXECS_PATHS=$(addprefix build/exec/, $(EXECS))
-LIBS_PATHS=$(addprefix build/libs/, $(LIBS))
 
 CC=g++
 CCFLAGS=-std=c++11 -Wall -Wextra -g -MP -MMD
@@ -69,7 +68,7 @@ endef
 
 define GENERATE_LINK_RUNLES
 
-build/exec/$(1): $$($(1)_objs) $$(util_objs) | build/exec
+build/exec/$(1): $$($(1)_objs) $$(util_objs) $$(raii_objs) $$(syscalls_objs) | build/exec
 	$$(CC) $$^ -o $$@
 
 endef

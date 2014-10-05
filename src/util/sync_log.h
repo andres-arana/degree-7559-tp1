@@ -1,12 +1,11 @@
-#ifndef __UTIL_SYNC_LOG_H_INCLUDED__
-#define __UTIL_SYNC_LOG_H_INCLUDED__
+#ifndef __UTIL__SYNC_LOG_H_INCLUDED__
+#define __UTIL__SYNC_LOG_H_INCLUDED__
 
 #include <string>
-#include "util/auto_file.h"
+#include "raii/raii.h"
 #include "util/string.h"
 
 namespace util {
-
   class sync_log {
     public:
       enum class level : unsigned int {
@@ -24,8 +23,6 @@ namespace util {
       void set_level(level value);
 
       void set_level(unsigned int value);
-
-      void separator();
 
       void info(const std::string &message);
 
@@ -64,11 +61,10 @@ namespace util {
         }
 
     private:
-      auto_file file;
+      raii::auto_file file;
       std::string name;
       level log_level;
   };
-
-};
+}
 
 #endif

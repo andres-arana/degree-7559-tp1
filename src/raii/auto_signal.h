@@ -1,11 +1,10 @@
-#ifndef __UTIL_AUTO_SIGNAL_H_INCLUDED
-#define __UTIL_AUTO_SIGNAL_H_INCLUDED
+#ifndef __RAII__AUTO_SIGNAL_H_INCLUDED
+#define __RAII__AUTO_SIGNAL_H_INCLUDED
 
 #include <functional>
 #include <signal.h>
 
-namespace util {
-
+namespace raii {
   class auto_signal {
     public:
       explicit auto_signal(int signal, std::function<void()> handler);

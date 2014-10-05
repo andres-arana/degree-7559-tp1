@@ -1,14 +1,10 @@
-#ifndef __UTIL__AUTO_FILE_LOCK_H_INCLUDED__
-#define __UTIL__AUTO_FILE_LOCK_H_INCLUDED__
+#ifndef __RAII__AUTO_FILE_LOCK_H_INCLUDED__
+#define __RAII__AUTO_FILE_LOCK_H_INCLUDED__
 
 #include <string>
 
-namespace util {
-
+namespace raii {
   class auto_file_lock {
-    private:
-      int file_descriptor;
-
     public:
       auto_file_lock();
       explicit auto_file_lock(int file_descriptor);
@@ -20,8 +16,10 @@ namespace util {
       auto_file_lock &operator=(auto_file_lock &&other);
 
       ~auto_file_lock();
-  };
 
-};
+    private:
+      int file_descriptor;
+  };
+}
 
 #endif

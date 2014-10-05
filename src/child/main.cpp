@@ -1,7 +1,6 @@
-#include "util/app.h"
+#include "util/util.h"
 #include <unistd.h>
 
-using namespace util;
 using namespace std;
 
 class child : public util::app {

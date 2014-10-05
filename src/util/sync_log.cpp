@@ -1,7 +1,5 @@
-#include "sync_log.h"
-#include "auto_file.h"
-#include "auto_file_lock.h"
-#include "syscalls.h"
+#include "util/sync_log.h"
+#include "syscalls/syscalls.h"
 #include <ctime>
 
 using namespace util;
@@ -20,12 +18,12 @@ namespace {
   }
 
   void do_log(
-      const auto_file &file,
+      const raii::auto_file &file,
       const string &name,
       const string &level,
       const string what) {
 
-    auto_file_lock lock(file.fd());
+    raii::auto_file_lock lock(file.fd());
 
     auto message = sformat(
         "$ PID: $ ($) [$]: $\n",
@@ -49,12 +47,6 @@ void sync_log::set_level(sync_log::level value) {
 void sync_log::set_level(unsigned int value) {
   log_level = static_cast<sync_log::level>(value);
 }
-
-void sync_log::separator() {
-  syscalls::write(file.fd(), "\n");
-  syscalls::write(file.fd(), "\n");
-  syscalls::write(file.fd(), "\n");
-};
 
 void sync_log::info(const string &message) {
   if (log_level <= sync_log::level::INFO) {

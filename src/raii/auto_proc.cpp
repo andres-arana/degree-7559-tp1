@@ -1,7 +1,7 @@
-#include "auto_proc.h"
-#include "syscalls.h"
+#include "raii/auto_proc.h"
+#include "syscalls/syscalls.h"
 
-using namespace util;
+using namespace raii;
 using namespace std;
 
 auto_proc::auto_proc()

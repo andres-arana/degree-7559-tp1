@@ -1,7 +1,7 @@
-#include "auto_file_lock.h"
-#include "syscalls.h"
+#include "raii/auto_file_lock.h"
+#include "syscalls/syscalls.h"
 
-using namespace util;
+using namespace raii;
 
 auto_file_lock::auto_file_lock() 
   : file_descriptor(-1) {

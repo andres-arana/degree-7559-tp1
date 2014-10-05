@@ -1,8 +1,7 @@
-#include "util/app.h"
-#include "util/auto_signal.h"
+#include "util/util.h"
+#include "raii/raii.h"
 #include <unistd.h>
 
-using namespace util;
 using namespace std;
 
 class cashier : public util::app {
@@ -29,7 +28,7 @@ class cashier : public util::app {
   private:
     sig_atomic_t halt;
 
-    auto_signal sigint;
+    raii::auto_signal sigint;
 };
 
 DEFINE_MAIN(cashier);

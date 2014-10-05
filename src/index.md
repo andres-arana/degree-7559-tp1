@@ -33,7 +33,14 @@ de cada uno:
 Para más información acerca de cada uno de estos, ver la documentación de las
 funciones main de cada ejecutable.
 
-Por otro lado, construimos una librería de utilidades compartida entre los
-diferentes ejecutables llamada util, que define todo lo exportado en el
-namespace util.
+Por otra parte, hay tres librerías compartidas que son utilizadas por los
+ejecutables:
 
+
+* **util**: Utilidades generales compartidas.
+
+* **syscalls**: Wrappers de system calls primitivas, utilizando excepciones
+  para reportar errores y tipos de c++ como std::string.
+
+* **raii**: Objetos que implementan el patrón RAII para los recursos del
+  sistema operativo manejados por las system calls de **syscalls**.

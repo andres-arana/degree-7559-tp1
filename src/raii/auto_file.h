@@ -1,14 +1,11 @@
-#ifndef __UTIL__FILE_H_INCLUDED__
-#define __UTIL__FILE_H_INCLUDED__
+#ifndef __RAII__FILE_H_INCLUDED__
+#define __RAII__FILE_H_INCLUDED__
 
 #include <string>
 #include <sys/file.h>
 
-namespace util {
+namespace raii {
   class auto_file {
-    private:
-      int file_descriptor;
-
     public:
       auto_file();
       explicit auto_file(const std::string &filename, int flags);
@@ -22,7 +19,10 @@ namespace util {
       int fd() const;
 
       ~auto_file();
+
+    private:
+      int file_descriptor;
   };
-};
+}
 
 #endif

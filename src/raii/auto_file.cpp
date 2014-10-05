@@ -1,7 +1,7 @@
-#include "auto_file.h"
-#include "syscalls.h"
+#include "raii/auto_file.h"
+#include "syscalls/syscalls.h"
 
-using namespace util;
+using namespace raii;
 using namespace std;
 
 namespace {

@@ -1,14 +1,17 @@
-#ifndef __UTIL_APP_H_INCLUDED__
-#define __UTIL_APP_H_INCLUDED__
+#ifndef __UTIL__APP_H_INCLUDED__
+#define __UTIL__APP_H_INCLUDED__
 
 #include "util/sync_log.h"
 #include "tclap/CmdLine.h"
 #include <string>
 
+#define DEFINE_MAIN(class)\
+  int main(int argc, char** argv) {\
+    class app;\
+    return app.run(argc, argv);\
+  }
+
 namespace util {
-
-#define DEFINE_MAIN(clazz) int main(int argc, char** argv) { clazz app; return app.run(argc, argv); }
-
   class app {
     public:
       explicit app(const std::string &name);
@@ -35,7 +38,6 @@ namespace util {
     private:
       TCLAP::ValueArg<int> log_level;
   };
-
-};
+}
 
 #endif

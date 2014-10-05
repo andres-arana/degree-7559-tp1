@@ -1,8 +1,8 @@
-#include "util/auto_signal.h"
-#include "util/syscalls.h"
+#include "raii/auto_signal.h"
+#include "syscalls/syscalls.h"
 #include <map>
 
-using namespace util;
+using namespace raii;
 using namespace std;
 
 namespace {
