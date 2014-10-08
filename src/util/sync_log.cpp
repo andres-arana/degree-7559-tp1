@@ -1,5 +1,7 @@
 #include "util/sync_log.h"
-#include "syscalls/syscalls.h"
+#include "syscalls/process.h"
+#include "syscalls/file.h"
+#include "raii/auto_file_lock.h"
 #include <ctime>
 
 using namespace util;

@@ -1,5 +1,6 @@
+#include "syscalls/process.h"
+#include "syscalls/signal.h"
 #include "raii/auto_proc.h"
-#include "syscalls/syscalls.h"
 
 using namespace raii;
 using namespace std;

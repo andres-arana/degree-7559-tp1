@@ -6,10 +6,6 @@
  * @brief Utilidades generales compartidas.
  */
 
-#include "util/app.h"
-#include "util/string.h"
-#include "util/sync_log.h"
-
 #endif
 
 

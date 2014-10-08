@@ -6,13 +6,6 @@
  * @brief Objetos que implementan el patrón RAII para los recursos de sistema.
  */
 
-#include "raii/auto_file.h"
-#include "raii/auto_file_lock.h"
-#include "raii/auto_proc.h"
-#include "raii/auto_signal.h"
-#include "raii/auto_shmem_registration.h"
-#include "raii/auto_shmem.h"
-
 #endif
 
 

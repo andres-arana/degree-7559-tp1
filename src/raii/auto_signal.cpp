@@ -1,5 +1,5 @@
+#include "syscalls/signal.h"
 #include "raii/auto_signal.h"
-#include "syscalls/syscalls.h"
 #include <map>
 
 using namespace raii;

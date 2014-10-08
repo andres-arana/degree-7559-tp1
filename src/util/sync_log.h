@@ -2,7 +2,7 @@
 #define __UTIL__SYNC_LOG_H_INCLUDED__
 
 #include <string>
-#include "raii/raii.h"
+#include "raii/auto_file.h"
 #include "util/string.h"
 
 namespace util {
