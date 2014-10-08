@@ -1,4 +1,4 @@
-# 75.59 - Técnicas de Proramación Concurrente I
+# 75.59 - Técnicas de Programación Concurrente I
 
 Este repositorio contiene el primer proyecto práctico realizado en la materia
 (75.59) Técnicas de Programación Concurrente I en la FIUBA.
@@ -20,24 +20,24 @@ El repositorio está organizado en el siguiente árbol de directorios:
 
 * `src`: Contiene el código fuente de toda la solución
 
-  * `src/audit`: Contiene el código fuente del ejecutable audit.
+    * `src/audit`: Contiene el código fuente del ejecutable audit.
 
-  * `src/carrousel`: Contiene el código fuente del ejecutable carrousel.
+    * `src/carrousel`: Contiene el código fuente del ejecutable carrousel.
 
-  * `src/cashier`: Contiene el código fuente del ejecutable cashier.
+    * `src/cashier`: Contiene el código fuente del ejecutable cashier.
 
-  * `src/child`: Contiene el código fuente del ejecutable child.
+    * `src/child`: Contiene el código fuente del ejecutable child.
 
-  * `src/director`: Contiene el código fuente del ejecutable director.
+    * `src/director`: Contiene el código fuente del ejecutable director.
 
-  * `src/spawner`: Contiene el código fuente del ejecutable spawner.
+    * `src/spawner`: Contiene el código fuente del ejecutable spawner.
 
-  * `src/util`: Contiene el código fuente de la librería compartida entre todos
+-   `src/util`: Contiene el código fuente de la librería compartida entre todos
     los procesos.
 
-* `build`: Directorio temporal que contiene los resultados de lo generado a
-  través del makefile. Se genera automáticamente según sea requerido por el
-makefile al correr ciertas tareas, y no se incluye por default.
+-   `build`: Directorio temporal que contiene los resultados de lo generado a
+    través del makefile. Se genera automáticamente según sea requerido por el
+    makefile al correr ciertas tareas, y no se incluye por default.
 
 ### Makefile
 

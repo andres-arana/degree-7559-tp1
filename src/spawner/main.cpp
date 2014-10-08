@@ -2,7 +2,6 @@
 #include "raii/raii.h"
 #include <vector>
 
-using namespace util;
 using namespace std;
 
 class spawner : public util::app {
