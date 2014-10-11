@@ -1,5 +1,7 @@
 #include "syscalls/shmem.h"
-#include "syscalls/error.h"
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/types.h>
 
 using namespace std;
 

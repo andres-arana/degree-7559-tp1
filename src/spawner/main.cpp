@@ -1,6 +1,6 @@
 #include "util/app.h"
-#include "raii/auto_signal.h"
-#include "raii/auto_proc.h"
+#include "raii/signal.h"
+#include "raii/proc.h"
 #include <vector>
 
 using namespace std;
@@ -17,7 +17,7 @@ class spawner : public util::app {
 
       auto log_level = configured_log_level();
 
-      vector<raii::auto_proc> processes;
+      vector<raii::proc> processes;
 
       for (int i = 0; i < children.getValue(); i++) {
         processes.emplace_back(false, "build/exec/child", "-l", log_level);

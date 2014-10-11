@@ -1,9 +1,7 @@
 #ifndef __SYSCALLS__SHMEM__H_INCLUDED__
 #define __SYSCALLS__SHMEM__H_INCLUDED__
 
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/types.h>
+#include "syscalls/error.h"
 
 namespace syscalls {
   int shmget(size_t size);
