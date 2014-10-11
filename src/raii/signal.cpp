@@ -1,5 +1,5 @@
 #include "syscalls/signal.h"
-#include "raii/auto_signal.h"
+#include "raii/signal.h"
 #include <map>
 
 using namespace raii;
@@ -17,27 +17,27 @@ namespace {
   }
 };
 
-auto_signal::auto_signal(int signal, function<void()> handler)
-  : signal(signal) {
+signal::signal(int signal, function<void()> handler)
+  : signal_id(signal) {
 
-    auto installed_handler = handlers.find(signal);
+    auto installed_handler = handlers.find(signal_id);
 
     if (installed_handler != handlers.end()) {
       throw runtime_error("You are already capturing this signal");
     }
 
-    handlers[signal] = handler;
+    handlers[signal_id] = handler;
 
-    syscalls::sigaction(signal, ::dispatch);
+    syscalls::sigaction(signal_id, ::dispatch);
   }
 
-auto_signal::~auto_signal() {
-  auto handler = handlers.find(signal);
+signal::~signal() {
+  auto handler = handlers.find(signal_id);
 
   if (handler != handlers.end()) {
     handlers.erase(handler);
   }
 
-  syscalls::sigaction(signal, SIG_DFL);
+  syscalls::sigaction(signal_id, SIG_DFL);
 }
 

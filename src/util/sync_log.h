@@ -2,7 +2,7 @@
 #define __UTIL__SYNC_LOG_H_INCLUDED__
 
 #include <string>
-#include "raii/auto_file.h"
+#include "raii/file.h"
 #include "util/string.h"
 
 namespace util {
@@ -61,7 +61,7 @@ namespace util {
         }
 
     private:
-      raii::auto_file file;
+      raii::file file;
       std::string name;
       level log_level;
   };
