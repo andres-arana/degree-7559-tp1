@@ -15,6 +15,8 @@ namespace syscalls {
 
   void write(int fd, const std::string &what);
 
+  void write(int fd, const void *what, size_t length);
+
   size_t read(int fd, void* buffer, size_t max);
 
   void flock(int fd);

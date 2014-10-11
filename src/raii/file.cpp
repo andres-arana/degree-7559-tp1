@@ -14,8 +14,7 @@ file::file()
   }
 
 file::file(const string &filename, int flags)
-  : file_descriptor(
-      syscalls::open(filename, flags, ::FILE_PERMISSIONS)) {
+  : file_descriptor(syscalls::open(filename, flags, ::FILE_PERMISSIONS)) {
 
   }
 

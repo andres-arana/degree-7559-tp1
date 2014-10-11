@@ -34,7 +34,11 @@ int syscalls::open(const string &filename, int flags, int permissions) {
 }
 
 void syscalls::write(int fd, const string &what) {
-  if (::write(fd, what.c_str(), what.length()) < 0) {
+  syscalls::write(fd, what.c_str(), what.length());
+}
+
+void syscalls::write(int fd, const void *what, size_t length) {
+  if (::write(fd, what, length) < 0) {
     throw syscalls::error("write");
   }
 }

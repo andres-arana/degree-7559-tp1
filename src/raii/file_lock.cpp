@@ -3,7 +3,7 @@
 
 using namespace raii;
 
-file_lock::file_lock() 
+file_lock::file_lock()
   : file_descriptor(-1) {
 
   }
