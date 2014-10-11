@@ -35,6 +35,10 @@ int auto_file::fd() const {
   return file_descriptor;
 }
 
+void auto_file::write(const string &what) {
+    syscalls::write(file_descriptor, what);
+}
+
 auto_file::~auto_file() {
   syscalls::close(file_descriptor);
 }

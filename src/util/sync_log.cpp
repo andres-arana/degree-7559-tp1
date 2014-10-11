@@ -20,7 +20,7 @@ namespace {
   }
 
   void do_log(
-      const raii::auto_file &file,
+      raii::auto_file &file,
       const string &name,
       const string &level,
       const string what) {
@@ -31,7 +31,8 @@ namespace {
         "$ PID: $ ($) [$]: $\n",
         human_current_time(), syscalls::getpid(), name, level, what);
 
-    syscalls::write(file.fd(), message);
+
+    file.write(message);
   }
 };
 

@@ -18,6 +18,8 @@ namespace raii {
 
       int fd() const;
 
+      void write(const std::string &what);
+
       ~auto_file();
 
     private:
