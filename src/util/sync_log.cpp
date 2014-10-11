@@ -1,7 +1,7 @@
 #include "util/sync_log.h"
 #include "syscalls/process.h"
 #include "syscalls/file.h"
-#include "raii/auto_file_lock.h"
+#include "raii/file_lock.h"
 #include <ctime>
 
 using namespace util;
@@ -20,18 +20,19 @@ namespace {
   }
 
   void do_log(
-      const raii::auto_file &file,
+      raii::file &file,
       const string &name,
       const string &level,
       const string what) {
 
-    raii::auto_file_lock lock(file.fd());
+    raii::file_lock lock(file.fd());
 
     auto message = sformat(
         "$ PID: $ ($) [$]: $\n",
         human_current_time(), syscalls::getpid(), name, level, what);
 
-    syscalls::write(file.fd(), message);
+
+    file.write(message);
   }
 };
 

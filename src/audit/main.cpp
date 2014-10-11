@@ -1,5 +1,5 @@
 #include "util/app.h"
-#include "raii/auto_signal.h"
+#include "raii/signal.h"
 #include <unistd.h>
 
 using namespace std;
@@ -28,7 +28,7 @@ class audit : public util::app {
   private:
     sig_atomic_t halt;
 
-    raii::auto_signal sigint;
+    raii::signal sigint;
 };
 
 DEFINE_MAIN(audit);

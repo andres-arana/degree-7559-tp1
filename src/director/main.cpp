@@ -1,6 +1,6 @@
 #include "util/app.h"
-#include "raii/auto_signal.h"
-#include "raii/auto_proc.h"
+#include "raii/signal.h"
+#include "raii/proc.h"
 
 using namespace std;
 
@@ -18,17 +18,17 @@ class director : public util::app {
       auto log_level = configured_log_level();
 
       {
-        raii::auto_proc audit(true, "build/exec/audit", "-l", log_level);
+        raii::proc audit(true, "build/exec/audit", "-l", log_level);
         log.debug("Started AUDIT process with id $", audit.pid());
 
-        raii::auto_proc carrousel(true, "build/exec/carrousel", "-l", log_level);
+        raii::proc carrousel(true, "build/exec/carrousel", "-l", log_level);
         log.debug("Started CARROUSEL process with id $", carrousel.pid());
 
-        raii::auto_proc cashier(true, "build/exec/cashier", "-l", log_level);
+        raii::proc cashier(true, "build/exec/cashier", "-l", log_level);
         log.debug("Started CASHIER process with id $", cashier.pid());
 
         {
-          raii::auto_proc spawner(false, "build/exec/spawner",
+          raii::proc spawner(false, "build/exec/spawner",
               "-c", children.getValue(), "-l", log_level);
           log.debug("Started SPAWNER process with id $", spawner.pid());
         }
