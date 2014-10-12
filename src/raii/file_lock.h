@@ -1,6 +1,7 @@
 #ifndef __RAII__FILE_LOCK_H_INCLUDED__
 #define __RAII__FILE_LOCK_H_INCLUDED__
 
+#include <fcntl.h>
 #include <string>
 
 namespace raii {
@@ -19,6 +20,7 @@ namespace raii {
 
     private:
       int file_descriptor;
+      struct flock fl;
   };
 }
 
