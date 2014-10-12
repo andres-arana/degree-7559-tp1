@@ -18,6 +18,7 @@ namespace {
 
     sem_b.sem_num = semnum;
     sem_b.sem_op = op;
+    sem_b.sem_flg = 0;
 
     return ::semop(id, &sem_b, 1);
   }

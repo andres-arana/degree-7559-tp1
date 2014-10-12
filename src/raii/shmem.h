@@ -1,6 +1,8 @@
 #ifndef __RAII__SHMEM__H_INCLUDED__
 #define __RAII__SHMEM__H_INCLUDED__
 
+#include "syscalls/shmem.h"
+
 namespace raii {
   template<typename T>
   class shmem {

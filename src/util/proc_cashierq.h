@@ -7,7 +7,7 @@
 namespace util {
   class proc_cashierq : public raii::proc {
     public:
-      explicit proc_cashierq(util::sync_log &log);
+      explicit proc_cashierq(util::sync_log &log, int semid, int shmemid);
   };
 }
 

@@ -33,11 +33,11 @@ class spawner : public util::app {
         log.info("Child $ is getting into the cashier queue", child_id);
         log.debug("Writing child id $ to the cashierq FIFO", child_id);
         fifo.write(child_id);
+        log.debug("Child id $ written to cashierq FIFO", child_id);
 
         log.debug("Increasing child id");
         child_id++;
 
-        log.debug("Child id $ written to cashierq FIFO");
         sleep(randomizer.next());
       }
 

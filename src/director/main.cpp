@@ -5,8 +5,11 @@
 #include "util/proc_cashier.h"
 #include "util/proc_cashierq.h"
 #include "util/proc_spawner.h"
+#include "util/cashier_data.h"
 #include "raii/signal.h"
 #include "raii/fifo_owner.h"
+#include "raii/sem_owner.h"
+#include "raii/shmem_owner.h"
 #include <iostream>
 
 using namespace std;
@@ -24,11 +27,17 @@ class director : public util::app {
       log.debug("Creating FIFO for cashierq");
       raii::fifo_owner cashierq_fifo(NAMES_CASHIERQ_FIFO);
 
+      log.debug("Creating binary semaphores for cashier");
+      raii::sem_owner cashier_sem(NAMES_SEM_CASHIER_AMOUNT, {1, 0, 0, 0});
+
+      log.debug("Creating shared memory for cashier");
+      raii::shmem_owner<util::cashier_data> cashier_shmem;
+
       {
         util::proc_audit audit(log);
         util::proc_carrousel carrousel(log);
-        util::proc_cashier cashier(log);
-        util::proc_cashierq cashierq(log);
+        util::proc_cashier cashier(log, cashier_sem.id(), cashier_shmem.id());
+        util::proc_cashierq cashierq(log, cashier_sem.id(), cashier_shmem.id());
         util::proc_spawner spawner(log);
 
         log.debug("All process spawned");

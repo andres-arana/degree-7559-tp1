@@ -6,11 +6,11 @@
 using namespace std;
 using namespace raii;
 
-sem_owner::sem_owner(unsigned short set_size, unsigned short initial_value)
+sem_owner::sem_owner(
+    unsigned short set_size,
+    const vector<unsigned short> &initial_values)
   : identifier(syscalls::semget(set_size)) {
-    syscalls::semsetall(
-        identifier,
-        vector<unsigned short>(set_size, initial_value));
+    syscalls::semsetall(identifier, initial_values);
   }
 
 int sem_owner::id() {
