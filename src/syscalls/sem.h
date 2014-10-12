@@ -86,21 +86,32 @@ namespace syscalls {
   void sem_setval(int id, int semnum, int semval);
 
   /**
-   * @brief Changes the semaphore to waiting
+   * @brief Increase the value for the semnum-th semaphore by a given amount.
    *
    * @param id identifier.
-   * @param semnun the semnum-th semaphore of the set.
+   * @param semnum the semnum-th semaphore of the set.
+   * @param amount the amount to increase by.
    */
-  void sem_waiting(int id, int semnum);
+  void sem_signal(int id, int semnum, int amount);
 
   /**
-   * @brief Changes the semaphore to available
+   * @brief Block until a given amount is available in the semnum-th semaphore,
+   * and atomically decrease the semaphore when it is available.
    *
    * @param id identifier.
-   * @param semnun the semnum-th semaphore of the set.
+   * @param semnum the semnum-th semaphore of the set.
+   * @param amount the amount to decrease by.
    */
-  void sem_available(int id, int semnum);
+  void sem_wait(int id, int semnum, int amount);
 
+  /**
+   * @brief Block until the semnum-th semaphore is completely used (with amount
+   * zero).
+   *
+   * @param id identifier.
+   * @param semnum the semnum-th semaphore of the set.
+   */
+  void sem_control(int id, int semnum);
 }
 
 #endif
