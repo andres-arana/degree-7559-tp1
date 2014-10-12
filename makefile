@@ -15,7 +15,6 @@ INCLUDES=-I src -I libs
 all: $(EXECS_PATHS)
 
 run: all
-	rm -rf concucalesita.log
 	build/exec/director -l 0
 
 doc: build/doc/informe.pdf
