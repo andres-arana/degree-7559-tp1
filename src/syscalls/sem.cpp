@@ -42,82 +42,82 @@ void syscalls::semrelease(int id) {
   }
 }
 
-vector<unsigned short> syscalls::sem_getall(int id, int semnum) {
+vector<unsigned short> syscalls::semgetall(int id, int semnum) {
   semun semarg;
   vector<unsigned short> forks(semnum);
   semarg.array = forks.data();
   auto result = ::semctl(id, 0, GETALL, semarg);
 
   if (result < 0) {
-    throw syscalls::error("sem_getall");
+    throw syscalls::error("semgetall");
   }
 
   return forks;
 }
 
-int syscalls::sem_getncnt(int id, int semnum) {
+int syscalls::semgetncnt(int id, int semnum) {
   auto result = ::semctl(id, semnum, GETNCNT);
 
   if (result < 0) {
-    throw syscalls::error("sem_getncnt");
+    throw syscalls::error("semgetncnt");
   }
 
   return result;
 }
 
-int syscalls::sem_getpid(int id, int semnum) {
+int syscalls::semgetpid(int id, int semnum) {
   auto result = ::semctl(id, semnum, GETPID);
 
   if (result < 0) {
-    throw syscalls::error("sem_getpid");
+    throw syscalls::error("semgetpid");
   }
 
   return result;
 }
 
-int syscalls::sem_getval(int id, int semnum) {
+int syscalls::semgetval(int id, int semnum) {
   semun semarg;
   auto result = ::semctl(id, semnum, GETVAL, semarg);
 
   if (result < 0) {
-    throw syscalls::error("sem_getval");
+    throw syscalls::error("semgetval");
   }
 
   return semarg.val;
 }
 
-int syscalls::sem_getzcnt(int id, int semnum) {
+int syscalls::semgetzcnt(int id, int semnum) {
   semun semarg;
   auto result = ::semctl(id, semnum, GETZCNT, semarg);
 
   if (result < 0) {
-    throw syscalls::error("sem_getzcnt");
+    throw syscalls::error("semgetzcnt");
   }
 
   return result;
 }
 
-void syscalls::sem_setall(int id, const vector<unsigned short> &forks) {
+void syscalls::semsetall(int id, const vector<unsigned short> &forks) {
   semun semarg;
   semarg.array = const_cast<unsigned short *>(forks.data());
   auto result = ::semctl(id, 0, SETALL, semarg);
 
   if (result < 0) {
-    throw syscalls::error("sem_setall");
+    throw syscalls::error("semsetall");
   }
 }
 
-void syscalls::sem_setval(int id, int semnum, int semval) {
+void syscalls::semsetval(int id, int semnum, int semval) {
   semun sem_union;
   sem_union.val = semval;
   auto result = ::semctl(id, semnum, SETVAL, sem_union);
 
   if (result < 0) {
-    throw syscalls::error("sem_setval");
+    throw syscalls::error("semsetval");
   }
 }
 
-void syscalls::sem_signal(int id, int semnum, int amount) {
+void syscalls::semsignal(int id, int semnum, int amount) {
   auto result = sem_op(id, semnum, amount);
 
   if (result < 0) {
@@ -125,7 +125,7 @@ void syscalls::sem_signal(int id, int semnum, int amount) {
   }
 }
 
-void syscalls::sem_wait(int id, int semnum, int amount) {
+void syscalls::semwait(int id, int semnum, int amount) {
   auto result = sem_op(id, semnum, -amount);
 
   if (result < 0) {
@@ -133,7 +133,7 @@ void syscalls::sem_wait(int id, int semnum, int amount) {
   }
 }
 
-void syscalls::sem_control(int id, int semnum) {
+void syscalls::semcontrol(int id, int semnum) {
   auto result = sem_op(id, semnum, 0);
 
   if (result < 0) {

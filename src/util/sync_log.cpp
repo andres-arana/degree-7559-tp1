@@ -51,6 +51,10 @@ void sync_log::set_level(unsigned int value) {
   log_level = static_cast<sync_log::level>(value);
 }
 
+unsigned int sync_log::get_level() const {
+  return static_cast<unsigned int>(log_level);
+}
+
 void sync_log::info(const string &message) {
   if (log_level <= sync_log::level::INFO) {
     do_log(file, name, "INFO", message);

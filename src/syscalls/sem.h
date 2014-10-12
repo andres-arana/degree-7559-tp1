@@ -31,7 +31,7 @@ namespace syscalls {
    * @param id identifier.
    * @param semnum the semnum-th semaphore of the set.
    */
-  std::vector<unsigned short> sem_getall(int id, int semnum);
+  std::vector<unsigned short> semgetall(int id, int semnum);
 
   /**
    * @brief the number of processes waiting for an increase of semval for the
@@ -40,7 +40,7 @@ namespace syscalls {
    * @param id identifier.
    * @param semnum the semnum-th semaphore of the set.
    */
-  int sem_getncnt(int id, int semnum);
+  int semgetncnt(int id, int semnum);
 
   /**
    * @brief Get the PID of the last process to have called semop on the semaphore
@@ -48,7 +48,7 @@ namespace syscalls {
    * @param id identifier.
    * @param semnum the semnum-th semaphore of the set.
    */
-  int sem_getpid(int id, int semnum);
+  int semgetpid(int id, int semnum);
 
   /**
    * @brief The value of semval for the semnum-th* semaphore of the set.
@@ -56,7 +56,7 @@ namespace syscalls {
    * @param id identifier.
    * @param semnum the semnum-th semaphore of the set.
    */
-  int sem_getval(int id, int semnum);
+  int semgetval(int id, int semnum);
 
   /**
    * @brief the number of processes waiting for semval of the semnum-th
@@ -65,7 +65,7 @@ namespace syscalls {
    * @param id identifier.
    * @param semnum the semnum-th semaphore of the set.
    */
-  int sem_getzcnt(int id, int semnum);
+  int semgetzcnt(int id, int semnum);
 
   /**
    * @brief Set semval for all sem by array.
@@ -73,7 +73,7 @@ namespace syscalls {
    * @param id identifier.
    * @param forks array with the all the values to be set.
    */
-  void sem_setall(int id, const std::vector<unsigned short> &forks);
+  void semsetall(int id, const std::vector<unsigned short> &forks);
 
   /**
    * @brief Set  the  value  of  semval for the semnum-th semaphore
@@ -83,7 +83,7 @@ namespace syscalls {
    * @param semnum the semnum-th semaphore of the set.
    * @param semval the value to assign to the sem.
    */
-  void sem_setval(int id, int semnum, int semval);
+  void semsetval(int id, int semnum, int semval);
 
   /**
    * @brief Increase the value for the semnum-th semaphore by a given amount.
@@ -92,7 +92,7 @@ namespace syscalls {
    * @param semnum the semnum-th semaphore of the set.
    * @param amount the amount to increase by.
    */
-  void sem_signal(int id, int semnum, int amount);
+  void semsignal(int id, int semnum, int amount);
 
   /**
    * @brief Block until a given amount is available in the semnum-th semaphore,
@@ -102,7 +102,7 @@ namespace syscalls {
    * @param semnum the semnum-th semaphore of the set.
    * @param amount the amount to decrease by.
    */
-  void sem_wait(int id, int semnum, int amount);
+  void semwait(int id, int semnum, int amount);
 
   /**
    * @brief Block until the semnum-th semaphore is completely used (with amount
@@ -111,7 +111,7 @@ namespace syscalls {
    * @param id identifier.
    * @param semnum the semnum-th semaphore of the set.
    */
-  void sem_control(int id, int semnum);
+  void semcontrol(int id, int semnum);
 }
 
 #endif

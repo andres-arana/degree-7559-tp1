@@ -24,6 +24,3 @@ int app::run(int argc, char** argv) {
   return EXIT_SUCCESS;
 }
 
-unsigned int app::configured_log_level() {
-  return static_cast<unsigned int>(log_level.getValue());
-}

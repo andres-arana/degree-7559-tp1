@@ -33,8 +33,6 @@ namespace util {
 
       virtual void do_run() = 0;
 
-      unsigned int configured_log_level();
-
     private:
       TCLAP::ValueArg<int> log_level;
   };

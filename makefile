@@ -1,6 +1,6 @@
 .PHONY: all run doc doc-preview doc-spell srcdoc srcdoc-preview clean export
 
-EXECS=audit carrousel cashier child director spawner
+EXECS=audit carrousel cashier cashierq director spawner
 LIBS=util raii syscalls
 
 EXECS_PATHS=$(addprefix build/exec/, $(EXECS))
@@ -15,7 +15,8 @@ INCLUDES=-I src -I libs
 all: $(EXECS_PATHS)
 
 run: all
-	build/exec/director -c 10 -l 0
+	rm -rf concucalesita.log
+	build/exec/director -l 0
 
 doc: build/doc/informe.pdf
 

@@ -1,45 +1,47 @@
 #include "util/app.h"
+#include "util/names.h"
+#include "util/proc_audit.h"
+#include "util/proc_carrousel.h"
+#include "util/proc_cashier.h"
+#include "util/proc_cashierq.h"
+#include "util/proc_spawner.h"
 #include "raii/signal.h"
-#include "raii/proc.h"
+#include "raii/fifo_owner.h"
+#include <iostream>
 
 using namespace std;
 
 class director : public util::app {
   public:
     explicit director() :
-      app("DIRECTOR"),
-      children("c", "children", "Amount of children", true, 0, "int", args) { }
+      app("DIRECTOR") { }
 
   protected:
     virtual void do_run() override {
       log.info("Simulation started");
       log.debug("About to start all controller processes");
 
-      auto log_level = configured_log_level();
+      log.debug("Creating FIFO for cashierq");
+      raii::fifo_owner cashierq_fifo(NAMES_CASHIERQ_FIFO);
 
       {
-        raii::proc audit(true, "build/exec/audit", "-l", log_level);
-        log.debug("Started AUDIT process with id $", audit.pid());
+        util::proc_audit audit(log);
+        util::proc_carrousel carrousel(log);
+        util::proc_cashier cashier(log);
+        util::proc_cashierq cashierq(log);
+        util::proc_spawner spawner(log);
 
-        raii::proc carrousel(true, "build/exec/carrousel", "-l", log_level);
-        log.debug("Started CARROUSEL process with id $", carrousel.pid());
+        log.debug("All process spawned");
 
-        raii::proc cashier(true, "build/exec/cashier", "-l", log_level);
-        log.debug("Started CASHIER process with id $", cashier.pid());
+        cout << "Simulation running, press enter to stop it" << endl;
+        cin.ignore();
 
-        {
-          raii::proc spawner(false, "build/exec/spawner",
-              "-c", children.getValue(), "-l", log_level);
-          log.debug("Started SPAWNER process with id $", spawner.pid());
-        }
+        log.debug("Sending interruption signal to all proccesses");
       }
 
       log.debug("All controller processes finished");
       log.info("Simulation completed");
     }
-
-  private:
-    TCLAP::ValueArg<int> children;
 };
 
 DEFINE_MAIN(director);

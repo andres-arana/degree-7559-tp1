@@ -24,6 +24,8 @@ namespace util {
 
       void set_level(unsigned int value);
 
+      unsigned int get_level() const;
+
       void info(const std::string &message);
 
       template<typename... Ts>

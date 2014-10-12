@@ -38,7 +38,7 @@ namespace raii {
 
       void signal(int signal);
 
-      ~proc();
+      virtual ~proc();
 
     private:
       pid_t process_id;

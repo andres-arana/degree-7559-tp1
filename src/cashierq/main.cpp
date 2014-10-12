@@ -4,10 +4,10 @@
 
 using namespace std;
 
-class spawner : public util::app {
+class cashierq : public util::app {
   public:
-    explicit spawner() :
-      app("SPAWNER"),
+    explicit cashierq() :
+      app("CASHIERQ"),
       halt(0),
       sigint(SIGINT, [this]() { halt = 1; }) { }
 
@@ -16,7 +16,7 @@ class spawner : public util::app {
       log.debug("Starting check loop");
 
       while (!halt) {
-        // TODO: Implement spawner process, simulated for now
+        // TODO: Implement cashierq process, simulated for now
         log.debug("Before going to sleep");
         sleep(1);
         log.debug("Woke up!");
@@ -31,5 +31,5 @@ class spawner : public util::app {
     raii::signal sigint;
 };
 
-DEFINE_MAIN(spawner);
+DEFINE_MAIN(cashierq);
 
