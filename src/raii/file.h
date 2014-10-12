@@ -7,14 +7,13 @@
 namespace raii {
   class file {
     public:
-      file();
       explicit file(const std::string &filename, int flags);
 
       file(const file &other) = delete;
       file & operator=(const file &other) = delete;
 
-      file(file &&other);
-      file &operator=(file &&other);
+      file(file &&other) = delete;
+      file &operator=(file &&other) = delete;
 
       int fd() const;
 

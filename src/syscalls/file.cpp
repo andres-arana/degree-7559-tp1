@@ -7,6 +7,18 @@
 
 using namespace std;
 
+namespace {
+  struct flock make_lock_struct(int type) {
+    struct flock result;
+    result.l_whence = SEEK_SET;
+    result.l_start = 0;
+    result.l_len = 0;
+    result.l_type = type;
+
+    return result;
+  }
+}
+
 void syscalls::mknod(const string &path, int flags) {
   auto result = ::mknod(path.c_str(), flags, 0);
 
@@ -63,14 +75,26 @@ void syscalls::close(int fd) {
   }
 }
 
-void syscalls::flock(int fd) {
-  if (fd > 0 && ::flock(fd, LOCK_EX)) {
-    throw syscalls::error("flock", "LOCK_EX");
+void syscalls::frdlock(int fd) {
+  auto fl = make_lock_struct(F_RDLCK);
+
+  if (::fcntl(fd, F_SETLKW, &fl)) {
+    throw syscalls::error("fcntl", "F_SETLK F_RDLCK");
+  }
+}
+
+void syscalls::fwrlock(int fd) {
+  auto fl = make_lock_struct(F_WRLCK);
+
+  if (::fcntl(fd, F_SETLKW, &fl)) {
+    throw syscalls::error("fcntl", "F_SETLK F_WRLCK");
   }
 }
 
 void syscalls::funlock(int fd) {
-  if (fd > 0 && ::flock(fd, LOCK_UN)) {
-    throw syscalls::error("flock", "LOCK_UN");
+  auto fl = make_lock_struct(F_UNLCK);
+
+  if (::fcntl(fd, F_SETLKW, &fl)) {
+    throw syscalls::error("fcntl", "F_SETLK F_UNLCK");
   }
 }

@@ -2,6 +2,7 @@
 #define __SYSCALLS__FILE_H_INCLUDED__
 
 #include "syscalls/error.h"
+#include <sys/file.h>
 #include <string>
 
 namespace syscalls {
@@ -19,7 +20,9 @@ namespace syscalls {
 
   size_t read(int fd, void* buffer, size_t max);
 
-  void flock(int fd);
+  void frdlock(int fd);
+
+  void fwrlock(int fd);
 
   void funlock(int fd);
 }

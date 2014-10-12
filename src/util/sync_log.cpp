@@ -1,7 +1,7 @@
 #include "util/sync_log.h"
 #include "syscalls/process.h"
 #include "syscalls/file.h"
-#include "raii/file_lock.h"
+#include "raii/lock_write.h"
 #include <ctime>
 
 using namespace util;
@@ -25,7 +25,7 @@ namespace {
       const string &level,
       const string what) {
 
-    raii::file_lock lock(file.fd());
+    raii::lock_write(file.fd());
 
     auto message = sformat(
         "$ PID: $ ($) [$]: $\n",
