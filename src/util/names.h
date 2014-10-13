@@ -2,6 +2,7 @@
 #define __UTIL__NAMES__H_INCLUDED__
 
 #define NAMES_CASHIERQ_FIFO "cashierq_fifo"
+#define NAMES_BALANCE_FILE "balance"
 
 #define NAMES_SEM_CASHIER_AMOUNT 4
 

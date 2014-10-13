@@ -6,6 +6,8 @@ namespace util {
     unsigned long child_id;
     unsigned int money;
     unsigned int change;
+
+    unsigned long balance;
   };
 }
 

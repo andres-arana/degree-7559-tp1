@@ -7,7 +7,7 @@
 namespace util {
   class proc_audit : public raii::proc {
     public:
-      explicit proc_audit(util::sync_log &log);
+      explicit proc_audit(util::sync_log &log, int shmemid);
   };
 }
 
