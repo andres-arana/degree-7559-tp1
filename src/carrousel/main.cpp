@@ -17,9 +17,7 @@ class carrousel : public util::app {
 
       while (!halt) {
         // TODO: Implement carrousel process, simulated for now
-        log.debug("Before going to sleep");
         sleep(1);
-        log.debug("Woke up!");
       }
 
       log.debug("Halt was set, terminating");

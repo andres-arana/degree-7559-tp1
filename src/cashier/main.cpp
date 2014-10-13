@@ -1,6 +1,6 @@
 #include "util/app.h"
 #include "util/names.h"
-#include "util/cashier_data.h"
+#include "util/shared_data.h"
 #include "raii/signal.h"
 #include "raii/shmem.h"
 #include "raii/sem.h"
@@ -15,12 +15,13 @@ class cashier : public util::app {
       halt(0),
       semid("s", "semaphore", "Semaphore id", true, 0, "int", args),
       shmemid("m", "memory", "Shared memory id", true, 0, "int", args),
+      price("p", "price", "Amount to charge", true, 0, "int", args),
       sigint(SIGINT, [this]() { halt = 1; }) { }
 
   protected:
     virtual void do_run() override {
       log.debug("Attaching shared memory");
-      raii::shmem<util::cashier_data> shmem(shmemid.getValue());
+      raii::shmem<util::shared_data> shmem(shmemid.getValue());
 
       log.debug("Constructing semaphores");
       raii::sem child_sem(semid.getValue(), NAMES_SEM_CASHIER_CHILD);
@@ -37,7 +38,7 @@ class cashier : public util::app {
         log.info("The cashier received $ from the child $", shmem->money, shmem->child_id);
 
         log.debug("Writting change to shared memory");
-        shmem->change = 60;
+        shmem->change = shmem->money - price.getValue();
 
         log.info("The cashier is giving the child $ the change $", shmem->child_id, shmem->change);
         change_sem.signal();
@@ -50,6 +51,7 @@ class cashier : public util::app {
     sig_atomic_t halt;
     TCLAP::ValueArg<int> semid;
     TCLAP::ValueArg<int> shmemid;
+    TCLAP::ValueArg<int> price;
     raii::signal sigint;
 };
 

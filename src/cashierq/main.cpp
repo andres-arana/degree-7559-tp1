@@ -1,6 +1,7 @@
 #include "util/app.h"
 #include "util/names.h"
-#include "util/cashier_data.h"
+#include "util/shared_data.h"
+#include "util/randomizer.h"
 #include "raii/signal.h"
 #include "raii/fifo_reader.h"
 #include "raii/shmem.h"
@@ -15,12 +16,13 @@ class cashierq : public util::app {
       halt(0),
       semid("s", "semaphore", "Semaphore id", true, 0, "int", args),
       shmemid("m", "memory", "Shared memory id", true, 0, "int", args),
+      randomizer(100, 200),
       sigint(SIGINT, [this]() { halt = 1; }) { }
 
   protected:
     virtual void do_run() override {
       log.debug("Attaching shared memory");
-      raii::shmem<util::cashier_data> shmem(shmemid.getValue());
+      raii::shmem<util::shared_data> shmem(shmemid.getValue());
 
       log.debug("Constructing semaphores");
       raii::sem cashier_sem(semid.getValue(), NAMES_SEM_CASHIER_CASHIER);
@@ -48,7 +50,7 @@ class cashierq : public util::app {
         child_sem.signal();
 
         log.debug("Writing money to shared memory");
-        shmem->money = 100;
+        shmem->money = randomizer.next();
 
         log.info("The child $ gives $ money to the cashier", id, shmem->money);
         money_sem.signal();
@@ -70,6 +72,7 @@ class cashierq : public util::app {
     sig_atomic_t halt;
     TCLAP::ValueArg<int> semid;
     TCLAP::ValueArg<int> shmemid;
+    util::randomizer randomizer;
     raii::signal sigint;
 };
 

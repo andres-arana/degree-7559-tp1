@@ -14,9 +14,8 @@ class spawner : public util::app {
     explicit spawner() :
       app("SPAWNER"),
       halt(0),
-      randomizer(3, 5),
-      sigint(SIGINT, [this]() { halt = 1; }) {
-      }
+      randomizer(1, 3),
+      sigint(SIGINT, [this]() { halt = 1; }) { }
 
   protected:
     virtual void do_run() override {
