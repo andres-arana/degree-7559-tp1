@@ -15,7 +15,7 @@ INCLUDES=-I src -I libs
 all: $(EXECS_PATHS)
 
 run: all
-	build/exec/director -l 0 -p 30 -d 10 -c 10
+	build/exec/director -l 0 -p 30 -d 5 -c 5
 
 doc: build/doc/informe.pdf
 

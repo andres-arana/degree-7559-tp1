@@ -24,6 +24,10 @@ namespace raii {
         return result;
       }
 
+      int fd() {
+        return internal_fifo.fd();
+      }
+
     private:
       fifo internal_fifo;
   };

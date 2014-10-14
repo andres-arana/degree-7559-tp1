@@ -5,6 +5,7 @@
 #include "raii/signal.h"
 #include "raii/fifo_owner.h"
 #include "raii/sem_owner.h"
+#include "raii/shmem_dyn_owner.h"
 #include "raii/shmem_owner.h"
 #include "raii/shmem.h"
 #include "raii/temp_file.h"
@@ -55,6 +56,14 @@ class director : public util::app {
       log.debug("Creating binary semaphores for the carrousel places");
       raii::sem_owner carrousel_places_sem(carrousel_capacity.getValue(), 1);
       memory->sem_carrousel_places = carrousel_places_sem.id();
+
+      log.debug("Creating binary semaphores for the full carrousel places");
+      raii::sem_owner carrousel_full_places_sem(carrousel_capacity.getValue(), 0);
+      memory->sem_carrousel_full_places = carrousel_full_places_sem.id();
+
+      log.debug("Creating shared memory segment for carrousel places");
+      raii::shmem_dyn_owner<unsigned long> carrousel_places(memory->config_capacity);
+      memory->shmem_carrousel_places = carrousel_places.id();
 
       {
         util::proc_service  audit("build/exec/audit", log, shmem);

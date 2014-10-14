@@ -16,6 +16,14 @@ namespace util {
     int sem_cashier;
     int sem_carrousel_entrance;
     int sem_carrousel_places;
+    int sem_carrousel_full_places;
+
+    int shmem_carrousel_places;
+  };
+
+  struct child_in_place {
+    unsigned long child_id;
+    unsigned int place;
   };
 }
 

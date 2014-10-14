@@ -12,6 +12,8 @@ namespace raii {
 
       void signal(int semnum, int amount = 1);
 
+      void control(int semnum);
+
     private:
       int semid;
   };

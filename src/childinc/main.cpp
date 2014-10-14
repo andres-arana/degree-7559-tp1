@@ -1,8 +1,11 @@
 #include "util/app_owned.h"
+#include "util/names.h"
 #include "util/randomizer.h"
 #include "raii/sem_set.h"
+#include "raii/shmem_dyn.h"
 #include <vector>
 #include <numeric>
+#include <stdexcept>
 
 using namespace std;
 
@@ -21,6 +24,10 @@ class childinc : public util::app_owned {
 
       log.debug("Constructing semaphores");
       raii::sem_set places_sem(shmem->sem_carrousel_places);
+      raii::sem_set full_places_sem(shmem->sem_carrousel_full_places);
+
+      log.debug("Attaching to carrousel places shared memory");
+      raii::shmem_dyn<unsigned long> carrousel_places(shmem->shmem_carrousel_places);
 
       log.info("Child $ is now running looking for a place to sit", id);
       vector<unsigned int> places(shmem->config_capacity);
@@ -29,8 +36,8 @@ class childinc : public util::app_owned {
 
       auto chosen_place = find_place(id, places, places_sem);
       log.info("Child $ sat down on place $", id, chosen_place);
-
-      // TODO: Send child to carrousel
+      carrousel_places[chosen_place] = id;
+      full_places_sem.signal(chosen_place);
     }
 
   private:
@@ -48,6 +55,8 @@ class childinc : public util::app_owned {
           log.info("Child $ tried to sit on place $, but was already occupied", child_id, place);
         }
       }
+
+      throw runtime_error("Unable to find a place to sit for a child!");
     }
 };
 

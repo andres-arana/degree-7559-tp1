@@ -22,6 +22,10 @@ namespace raii {
         syscalls::write(internal_fifo.fd(), &what, sizeof(T));
       }
 
+      int fd() {
+        return internal_fifo.fd();
+      }
+
     private:
       fifo internal_fifo;
   };

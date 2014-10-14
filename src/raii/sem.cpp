@@ -19,3 +19,7 @@ bool sem::try_wait(int amount) {
 void sem::signal(int amount) {
   syscalls::semsignal(semid, semnum, amount);
 }
+
+void sem::control() {
+  syscalls::semcontrol(semid, semnum);
+}

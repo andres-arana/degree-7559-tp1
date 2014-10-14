@@ -11,6 +11,8 @@ namespace raii {
       bool try_wait(int amount = 1);
 
       void signal(int amount = 1);
+
+      void control();
     private:
       int semid;
       int semnum;
