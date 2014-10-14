@@ -16,7 +16,7 @@ class carrouselq : public util::app_owned {
     virtual void do_run(raii::shmem<util::shared_data> &shmem) override {
       log.debug("Opening carouselq fifo for reading");
       raii::fifo_reader<unsigned long> fifo(NAMES_CARROUSELQ_FIFO);
-      log.debug("Fifo opened, starting arrival loop");
+      log.debug("Fifo opened");
 
       log.debug("Constructing entrance semaphore");
       raii::sem entrance_sem(shmem->sem_carrousel_entrance, NAMES_SEM_CARROUSEL_ENTRANCE);

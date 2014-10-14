@@ -3,6 +3,7 @@
 
 #define NAMES_CASHIERQ_FIFO "cashierq_fifo"
 #define NAMES_CARROUSELQ_FIFO "carrouselq_fifo"
+#define NAMES_EXITQ_FIFO "exitq_fifo"
 #define NAMES_BALANCE_FILE "balance"
 
 #define NAMES_SEM_CASHIER_AMOUNT 4

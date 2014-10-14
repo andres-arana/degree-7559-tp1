@@ -45,6 +45,9 @@ class director : public util::app {
       log.debug("Creating FIFO for carrouselq");
       raii::fifo_owner carrouselq_fifo(NAMES_CARROUSELQ_FIFO);
 
+      log.debug("Creating FIFO for exitq");
+      raii::fifo_owner exitq_fifo(NAMES_EXITQ_FIFO);
+
       log.debug("Creating binary semaphores for cashier");
       raii::sem_owner cashier_sem(NAMES_SEM_CASHIER_AMOUNT, {1, 0, 0, 0});
       memory->sem_cashier = cashier_sem.id();
@@ -71,6 +74,7 @@ class director : public util::app {
         util::proc_service  carrouselq("build/exec/carrouselq", log, shmem);
         util::proc_service  cashier("build/exec/cashier", log, shmem);
         util::proc_service  cashierq("build/exec/cashierq", log, shmem);
+        util::proc_service  exitq("build/exec/exitq", log, shmem);
         util::proc_service  spawner("build/exec/spawner", log, shmem);
 
         log.debug("All process spawned");

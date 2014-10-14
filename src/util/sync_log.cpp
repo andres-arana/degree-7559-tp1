@@ -8,7 +8,7 @@ using namespace util;
 using namespace std;
 
 namespace {
-  const string FILENAME = "concucalesita.log";
+  const string FILENAME = "app.log";
 
   string human_current_time() {
     char humanized_time[80];

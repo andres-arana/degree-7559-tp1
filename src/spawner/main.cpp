@@ -15,6 +15,8 @@ class spawner : public util::app_owned {
 
   protected:
     virtual void do_run(raii::shmem<util::shared_data> &shmem) override {
+      (void)shmem;
+
       unsigned long child_id = 0;
 
       log.debug("Opening cashierq fifo for writing");
