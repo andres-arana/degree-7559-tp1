@@ -8,7 +8,8 @@ namespace raii {
   class shmem {
     public:
       explicit shmem(int id)
-        : data(static_cast<T*>(syscalls::shmat(id))) {
+        : data(static_cast<T*>(syscalls::shmat(id))),
+        identifier(id) {
 
         }
 
@@ -26,12 +27,17 @@ namespace raii {
         return data;
       }
 
+      int id() {
+        return identifier;
+      }
+
       ~shmem() {
         syscalls::shmdt(data);
       }
 
     private:
       T *data;
+      int identifier;
   };
 }
 

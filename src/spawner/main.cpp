@@ -1,31 +1,27 @@
-#include "util/app.h"
+#include "util/app_owned.h"
 #include "util/names.h"
 #include "util/randomizer.h"
-#include "raii/signal.h"
 #include "raii/fifo_writer.h"
-#include <unistd.h>
 #include <cstdlib>
 #include <time.h>
 
 using namespace std;
 
-class spawner : public util::app {
+class spawner : public util::app_owned {
   public:
     explicit spawner() :
-      app("SPAWNER"),
-      halt(0),
-      randomizer(1, 3),
-      sigint(SIGINT, [this]() { halt = 1; }) { }
+      app_owned("SPAWNER"),
+      randomizer(1, 3) {}
 
   protected:
-    virtual void do_run() override {
+    virtual void do_run(raii::shmem<util::shared_data> &shmem) override {
       unsigned long child_id = 0;
 
       log.debug("Opening cashierq fifo for writing");
       raii::fifo_writer<unsigned long> fifo(NAMES_CASHIERQ_FIFO);
       log.debug("Fifo opened, starting arrival loop");
 
-      while (!halt) {
+      while (!is_halted()) {
         log.debug("A new child was spawned with id $", child_id);
         log.info("A new child with id $ has arrived!", child_id);
 
@@ -44,9 +40,7 @@ class spawner : public util::app {
     }
 
   private:
-    sig_atomic_t halt;
     util::randomizer randomizer;
-    raii::signal sigint;
 };
 
 DEFINE_MAIN(spawner);

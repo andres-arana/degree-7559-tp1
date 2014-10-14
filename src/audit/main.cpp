@@ -1,33 +1,23 @@
-#include "util/app.h"
+#include "util/app_owned.h"
 #include "util/names.h"
-#include "util/shared_data.h"
 #include "util/randomizer.h"
-#include "raii/signal.h"
-#include "raii/shmem.h"
 #include "raii/file.h"
 #include "raii/lock_read.h"
-#include <unistd.h>
 
 using namespace std;
 
-class audit : public util::app {
+class audit : public util::app_owned {
   public:
     explicit audit() :
-      app("AUDIT"),
-      halt(0),
-      shmemid("m", "memory", "Shared memory id", true, 0, "int", args),
-      randomizer(3, 5),
-      sigint(SIGINT, [this]() { halt = 1; }) { }
+      app_owned("AUDIT"),
+      randomizer(3, 5) {}
 
   protected:
-    virtual void do_run() override {
-      log.debug("Attaching shared memory");
-      raii::shmem<util::shared_data> shmem(shmemid.getValue());
-
+    virtual void do_run(raii::shmem<util::shared_data> &shmem) override {
       log.debug("Opening balance file for locking");
       raii::file balance_file(NAMES_BALANCE_FILE, O_RDONLY);
 
-      while (!halt) {
+      while (!is_halted()) {
         auto sleep_time = randomizer.next();
         log.info("The auditor is going to come back in about $ seconds", sleep_time);
         sleep(sleep_time);
@@ -53,11 +43,8 @@ class audit : public util::app {
     }
 
   private:
-    sig_atomic_t halt;
-    TCLAP::ValueArg<int> shmemid;
     util::randomizer randomizer;
 
-    raii::signal sigint;
 };
 
 DEFINE_MAIN(audit);

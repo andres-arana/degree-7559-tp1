@@ -13,6 +13,13 @@ sem_owner::sem_owner(
     syscalls::semsetall(identifier, initial_values);
   }
 
+sem_owner::sem_owner(
+    unsigned short set_size,
+    unsigned short initial_value)
+  : sem_owner(set_size, vector<unsigned short>(set_size, initial_value)) {
+
+  }
+
 int sem_owner::id() {
   return identifier;
 }

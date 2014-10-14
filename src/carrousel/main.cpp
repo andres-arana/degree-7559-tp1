@@ -1,32 +1,24 @@
-#include "util/app.h"
-#include "raii/signal.h"
-#include <unistd.h>
+#include "util/app_owned.h"
+#include "util/names.h"
 
 using namespace std;
 
-class carrousel : public util::app {
+class carrousel : public util::app_owned {
   public:
     explicit carrousel() :
-      app("CARROUSEL"),
-      halt(0),
-      sigint(SIGINT, [this]() { halt = 1; }) { }
+      app_owned("CARROUSEL") {}
 
   protected:
-    virtual void do_run() override {
+    virtual void do_run(raii::shmem<util::shared_data> &shmem) override {
       log.debug("Starting check loop");
 
-      while (!halt) {
+      while (!is_halted()) {
         // TODO: Implement carrousel process, simulated for now
         sleep(1);
       }
 
       log.debug("Halt was set, terminating");
     }
-
-  private:
-    sig_atomic_t halt;
-
-    raii::signal sigint;
 };
 
 DEFINE_MAIN(carrousel);
