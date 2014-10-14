@@ -105,6 +105,18 @@ namespace syscalls {
   void semwait(int id, int semnum, int amount);
 
   /**
+   * @brief Try to decrease a given amount in the semnum-th semaphore if it is
+   * available. Otherwise, do not decrease any amount and return false,
+   *
+   * @param id identifier.
+   * @param semnum the semnum-th semaphore of the set.
+   * @param amount the amount to decrease by.
+   *
+   * @return true if the operation succedeed, false otherwise.
+   */
+  bool try_semwait(int id, int semnum, int amount);
+
+  /**
    * @brief Block until the semnum-th semaphore is completely used (with amount
    * zero).
    *

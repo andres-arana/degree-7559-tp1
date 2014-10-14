@@ -13,12 +13,12 @@ namespace {
     seminfo         *__buf;
   };
 
-  int sem_op(int id, int semnum, int op) {
+  int sem_op(int id, int semnum, int op, int flags) {
     sembuf sem_b;
 
     sem_b.sem_num = semnum;
     sem_b.sem_op = op;
-    sem_b.sem_flg = 0;
+    sem_b.sem_flg = flags;
 
     return ::semop(id, &sem_b, 1);
   }
@@ -119,7 +119,7 @@ void syscalls::semsetval(int id, int semnum, int semval) {
 }
 
 void syscalls::semsignal(int id, int semnum, int amount) {
-  auto result = sem_op(id, semnum, amount);
+  auto result = sem_op(id, semnum, amount, 0);
 
   if (result < 0) {
     throw syscalls::error("semop", "signal");
@@ -127,15 +127,29 @@ void syscalls::semsignal(int id, int semnum, int amount) {
 }
 
 void syscalls::semwait(int id, int semnum, int amount) {
-  auto result = sem_op(id, semnum, -amount);
+  auto result = sem_op(id, semnum, -amount, 0);
 
   if (result < 0) {
     throw syscalls::error("semop", "wait");
   }
 }
 
+bool syscalls::try_semwait(int id, int semnum, int amount) {
+  auto result = sem_op(id, semnum, -amount, IPC_NOWAIT);
+
+  if (result < 0) {
+    if (errno == EAGAIN) {
+      return false;
+    } else {
+      throw syscalls::error("semop", "trywait");
+    }
+  }
+
+  return true;
+}
+
 void syscalls::semcontrol(int id, int semnum) {
-  auto result = sem_op(id, semnum, 0);
+  auto result = sem_op(id, semnum, 0, 0);
 
   if (result < 0) {
     throw syscalls::error("semop", "control");
