@@ -18,11 +18,17 @@ class exitq : public util::app_owned {
       log.debug("Fifo opened");
 
       while (!is_halted()) {
-        log.debug("Reading child from exitq fifo");
-        auto child_id = fifo.read();
+        try {
+          log.debug("Reading child from exitq fifo");
+          auto child_id = fifo.read();
 
-        log.info("Child $ has left the carrousel", child_id);
+          log.info("Child $ has left the carrousel", child_id);
+        } catch (syscalls::interrupt &e) {
+          log.debug("An interrupt occurred while blocked on system call: $", e.what());
+        }
       }
+
+      log.debug("Halt was set, terminating");
     }
 };
 

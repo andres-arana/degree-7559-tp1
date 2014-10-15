@@ -5,6 +5,8 @@
 #include <sys/sem.h>
 #include <sys/types.h>
 #include <vector>
+#include "syscalls/error.h"
+#include "syscalls/interrupt.h"
 
 namespace syscalls {
 

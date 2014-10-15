@@ -4,7 +4,7 @@
 #include "raii/sem_set.h"
 #include "raii/shmem_dyn.h"
 #include "raii/fifo_writer.h"
-#include <unistd.h>
+#include "syscalls/sleep.h"
 
 using namespace std;
 
@@ -28,31 +28,37 @@ class carrousel : public util::app_owned {
       raii::shmem_dyn<unsigned long> carrousel_places(shmem->shmem_carrousel_places);
 
       while (!is_halted()) {
-        log.debug("Ensuring all places are full");
-        for (unsigned int i = 0; i < shmem->config_capacity; i++) {
-          log.debug("Ensuring place $ is full", i);
-          full_places_sem.wait(i);
-          log.debug("Place $ has a children $", i, carrousel_places[i]);
+        try {
+          log.debug("Ensuring all places are full");
+          for (unsigned int i = 0; i < shmem->config_capacity; i++) {
+            log.debug("Ensuring place $ is full", i);
+            full_places_sem.wait(i);
+            log.debug("Place $ has a children $", i, carrousel_places[i]);
+          }
+
+          log.info("All children are on their places, starting carrousel lap");
+          log.info("Children will have fun for $ seconds", shmem->config_duration);
+          syscalls::sleep(shmem->config_duration);
+
+          log.info("Lap is over! All children are leaving their places");
+          for (unsigned int i = 0; i < shmem->config_capacity; i++) {
+            unsigned long child_id = carrousel_places[i];
+            log.debug("Releasing child $ from place $", child_id, i);
+            places_sem.signal(i);
+
+            log.info("Child $ is now in the queue to exit the carrousel", child_id);
+            fifo.write(child_id);
+            log.debug("Child sent to queue");
+          }
+
+          log.info("All children left the carrousel, openingn carrousel entrance");
+          entrance_sem.signal();
+        } catch (syscalls::interrupt &e) {
+          log.debug("An interrupt occurred while blocked on system call: $", e.what());
         }
-
-        log.info("All children are on their places, starting carrousel lap");
-        log.info("Children will have fun for $ seconds", shmem->config_duration);
-        sleep(shmem->config_duration);
-
-        log.info("Lap is over! All children are leaving their places");
-        for (unsigned int i = 0; i < shmem->config_capacity; i++) {
-          unsigned long child_id = carrousel_places[i];
-          log.debug("Releasing child $ from place $", child_id, i);
-          places_sem.signal(i);
-
-          log.info("Child $ is now in the queue to exit the carrousel", child_id);
-          fifo.write(child_id);
-          log.debug("Child sent to queue");
-        }
-
-        log.info("All children left the carrousel, openingn carrousel entrance");
-        entrance_sem.signal();
       }
+
+      log.debug("Halt was set, terminating");
     }
 };
 

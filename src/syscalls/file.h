@@ -2,6 +2,7 @@
 #define __SYSCALLS__FILE_H_INCLUDED__
 
 #include "syscalls/error.h"
+#include "syscalls/interrupt.h"
 #include <sys/file.h>
 #include <string>
 

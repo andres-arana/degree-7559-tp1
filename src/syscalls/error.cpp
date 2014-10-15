@@ -6,7 +6,7 @@ using namespace std;
 using namespace syscalls;
 
 error::error(const string &syscall, const string &context)
-  : runtime_error(util::sformat("La syscall $ ($) falló con errno [$]",
+  : runtime_error(util::sformat("Syscall $ ($) failed with errno [$]",
         syscall, context, errno)) {
 
   }

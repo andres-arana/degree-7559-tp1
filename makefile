@@ -33,7 +33,7 @@ srcdoc-preview: srcdoc
 
 clean:
 	rm -rf build
-	rm -f concucalesita.log
+	rm -f app.log
 
 export: all doc
 	# TODO: Complete the export task

@@ -22,25 +22,31 @@ class carrouselq : public util::app_owned {
       raii::sem entrance_sem(shmem->sem_carrousel_entrance, NAMES_SEM_CARROUSEL_ENTRANCE);
 
       while (!is_halted()) {
-        log.debug("Trying to acquire entrance semaphore");
-        entrance_sem.wait();
-        log.info("The carrousel is now ready for children");
+        try {
+          log.debug("Trying to acquire entrance semaphore");
+          entrance_sem.wait();
+          log.info("The carrousel is now ready for children");
 
-        {
-          vector<util::proc_childinc> children;
+          {
+            vector<util::proc_childinc> children;
 
-          for (unsigned int i = 0; i < shmem->config_capacity; i++) {
-            log.debug("Reading a child from the carrousel queue");
-            auto id = fifo.read();
-            log.info("Child $ went through the carrousel entrance", id);
+            for (unsigned int i = 0; i < shmem->config_capacity; i++) {
+              log.debug("Reading a child from the carrousel queue");
+              auto id = fifo.read();
+              log.info("Child $ went through the carrousel entrance", id);
 
-            log.debug("Creating new childinc process for child $", id);
-            children.emplace_back(log, shmem, id);
+              log.debug("Creating new childinc process for child $", id);
+              children.emplace_back(log, shmem, id);
+            }
+
+            log.info("No more children can enter the carrousel, waiting for the next lap");
           }
-
-          log.info("No more children can enter the carrousel, waiting for the next lap");
+        } catch (syscalls::interrupt &e) {
+          log.debug("An interrupt occurred while blocked on system call: $", e.what());
         }
       }
+
+      log.debug("Halt was set, terminating");
     }
 };
 

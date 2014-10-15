@@ -130,7 +130,7 @@ void syscalls::semwait(int id, int semnum, int amount) {
   auto result = sem_op(id, semnum, -amount, 0);
 
   if (result < 0) {
-    throw syscalls::error("semop", "wait");
+    syscalls::check_interrupt("semop", "wait");
   }
 }
 
@@ -141,7 +141,7 @@ bool syscalls::try_semwait(int id, int semnum, int amount) {
     if (errno == EAGAIN) {
       return false;
     } else {
-      throw syscalls::error("semop", "trywait");
+      syscalls::check_interrupt("semop", "trywait");
     }
   }
 
@@ -152,6 +152,6 @@ void syscalls::semcontrol(int id, int semnum) {
   auto result = sem_op(id, semnum, 0, 0);
 
   if (result < 0) {
-    throw syscalls::error("semop", "control");
+    syscalls::check_interrupt("semop", "control");
   }
 }

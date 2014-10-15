@@ -1,6 +1,7 @@
 #include "syscalls/process.h"
 #include "syscalls/signal.h"
 #include "raii/proc.h"
+#include <iostream>
 
 using namespace raii;
 using namespace std;
@@ -19,7 +20,7 @@ proc::proc(
     bool interrupt,
     const string& command,
     const vector<string> &args)
-  : interrupt(interrupt) {
+  : interrupt(interrupt), command(command) {
 
     process_id = syscalls::fork(command);
 
@@ -29,7 +30,7 @@ proc::proc(
   }
 
 proc::proc(proc &&other)
-  : process_id(other.process_id), interrupt(other.interrupt) {
+  : process_id(other.process_id), interrupt(other.interrupt), command(other.command) {
     other.process_id = -1;
   }
 
@@ -37,6 +38,7 @@ proc & proc::operator=(proc &&other) {
   syscalls::wait(process_id);
   process_id = other.process_id;
   interrupt = other.interrupt;
+  command = other.command;
   other.process_id = -1;
   return *this;
 }
@@ -53,7 +55,6 @@ proc::~proc() {
   if (process_id > 0 && interrupt) {
     signal(SIGINT);
   }
-
   syscalls::wait(process_id);
 }
 

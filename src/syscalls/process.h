@@ -5,6 +5,7 @@
 #include <vector>
 #include <sys/types.h>
 #include "syscalls/error.h"
+#include "syscalls/interrupt.h"
 
 namespace syscalls {
     int fork(const std::string &command);

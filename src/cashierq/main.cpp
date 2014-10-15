@@ -30,34 +30,38 @@ class cashierq : public util::app_owned {
       log.debug("Fifo opened. Starting arrival loop");
 
       while (!is_halted()) {
-        log.debug("Reading a child id from the cashier queue");
-        auto id = cashier_fifo.read();
-        log.debug("Read child id $ from cashier queue", id);
+        try {
+          log.debug("Reading a child id from the cashier queue");
+          auto id = cashier_fifo.read();
+          log.debug("Read child id $ from cashier queue", id);
 
-        log.info("Child $ is waiting for the cashier to be available", id);
-        cashier_sem.wait();
+          log.info("Child $ is waiting for the cashier to be available", id);
+          cashier_sem.wait();
 
-        log.debug("The cashier is mine. Writting child id.");
-        shmem->cashier_child_id = id;
+          log.debug("The cashier is mine. Writting child id.");
+          shmem->cashier_child_id = id;
 
-        log.debug("Child id provided, making it available");
-        child_sem.signal();
+          log.debug("Child id provided, making it available");
+          child_sem.signal();
 
-        log.debug("Writing money to shared memory");
-        shmem->cashier_child_money = randomizer.next();
+          log.debug("Writing money to shared memory");
+          shmem->cashier_child_money = randomizer.next();
 
-        log.info("The child $ gives $ money to the cashier", id, shmem->cashier_child_money);
-        money_sem.signal();
+          log.info("The child $ gives $ money to the cashier", id, shmem->cashier_child_money);
+          money_sem.signal();
 
-        log.info("The child $ is waiting for the change", id);
-        change_sem.wait();
-        log.info("The child $ received change $", id, shmem->cashier_child_change);
+          log.info("The child $ is waiting for the change", id);
+          change_sem.wait();
+          log.info("The child $ received change $", id, shmem->cashier_child_change);
 
-        log.info("Child $ is done with the cashier, going to the carrousel", id);
-        cashier_sem.signal();
+          log.info("Child $ is done with the cashier, going to the carrousel", id);
+          cashier_sem.signal();
 
-        log.debug("Writing child id $ to carrousel queue", id);
-        carrousel_fifo.write(id);
+          log.debug("Writing child id $ to carrousel queue", id);
+          carrousel_fifo.write(id);
+        } catch (syscalls::interrupt &e) {
+          log.debug("An interrupt occurred while blocked on system call: $", e.what());
+        }
       }
 
       log.debug("Halt was set, terminating");

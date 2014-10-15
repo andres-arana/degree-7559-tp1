@@ -43,6 +43,7 @@ namespace raii {
     private:
       pid_t process_id;
       bool interrupt;
+      std::string command;
   };
 }
 

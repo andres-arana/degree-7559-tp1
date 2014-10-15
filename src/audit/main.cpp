@@ -3,6 +3,7 @@
 #include "util/randomizer.h"
 #include "raii/file.h"
 #include "raii/lock_read.h"
+#include "syscalls/sleep.h"
 
 using namespace std;
 
@@ -18,25 +19,29 @@ class audit : public util::app_owned {
       raii::file balance_file(NAMES_BALANCE_FILE, O_RDONLY);
 
       while (!is_halted()) {
-        auto sleep_time = randomizer.next();
-        log.info("The auditor is going to come back in about $ seconds", sleep_time);
-        sleep(sleep_time);
+        try {
+          auto sleep_time = randomizer.next();
+          log.info("The auditor is going to come back in about $ seconds", sleep_time);
+          syscalls::sleep(sleep_time);
 
-        log.info("The auditor has come back. He needs to check the balance");
+          log.info("The auditor has come back. He needs to check the balance");
 
-        {
-          log.debug("Attempting to lock the balance file for reading");
-          raii::lock_read lock(balance_file.fd());
+          {
+            log.debug("Attempting to lock the balance file for reading");
+            raii::lock_read lock(balance_file.fd());
 
-          log.info("The auditor now checks the balance, taking a bit of time");
-          sleep(randomizer.next());
+            log.info("The auditor now checks the balance, taking a bit of time");
+            syscalls::sleep(randomizer.next());
 
-          log.info("The auditor has checked and the balance is $", shmem->balance);
+            log.info("The auditor has checked and the balance is $", shmem->balance);
 
-          log.debug("Unlocking the balance file");
+            log.debug("Unlocking the balance file");
+          }
+
+          log.info("The cashier has finished his round");
+        } catch (syscalls::interrupt &e) {
+          log.debug("An interrupt occurred while blocked on system call: $", e.what());
         }
-
-        log.info("The cashier has finished his round");
       }
 
       log.debug("Halt was set, terminating");

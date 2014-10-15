@@ -30,8 +30,13 @@ void syscalls::execv(const string &command, const vector<string> &args) {
 
 int syscalls::wait(pid_t pid) {
   int status;
-  if (pid > 0 && ::waitpid(pid, &status, 0) < 0) {
-    throw syscalls::error("waitpid");
+
+  if (pid > 0) {
+    while (::waitpid(pid, &status, 0) < 0) {
+      if (errno != EINTR) {
+        throw syscalls::error("waitpid");
+      }
+    }
   }
 
   return status;

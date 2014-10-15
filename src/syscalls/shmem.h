@@ -2,6 +2,7 @@
 #define __SYSCALLS__SHMEM__H_INCLUDED__
 
 #include "syscalls/error.h"
+#include "syscalls/interrupt.h"
 
 namespace syscalls {
   int shmget(size_t size);
