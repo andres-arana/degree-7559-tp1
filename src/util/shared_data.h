@@ -20,11 +20,6 @@ namespace util {
 
     int shmem_carrousel_places;
   };
-
-  struct child_in_place {
-    unsigned long child_id;
-    unsigned int place;
-  };
 }
 
 #endif
