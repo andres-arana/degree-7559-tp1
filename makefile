@@ -28,6 +28,9 @@ doc-spell: docs/informe.tex
 srcdoc: | build/srcdoc
 	doxygen doxyfile
 
+srcdoc-classes: | build/srcdoc
+	doxygen doxyfile_classDiagram -g
+
 srcdoc-preview: srcdoc
 	firefox build/srcdoc/html/index.html
 
